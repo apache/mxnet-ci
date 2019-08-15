@@ -1,0 +1,14 @@
+test:
+    EMAIL_SENDER_ARN: arn:aws:ses:us-west-2:REDACTED:identity/REDACTED@REDACTED.com
+    EMAIL_SENDER: 'REDACTED@REDACTED.com'
+    EMAIL_RECEIVER_ARN: arn:aws:ses:us-west-2:REDACTED:identity/REDACTED@REDACTED.com
+    EMAIL_RECEIVER: 'REDACTED@REDACTED.com'
+    JENKINS_URL: "http://jenkins.mxnet-ci.amazon-ml.com/"
+
+prod:
+    EMAIL_SENDER_ARN: arn:aws:ses:us-west-2:REDACTED:identity/REDACTED@REDACTED.com
+    EMAIL_SENDER: 'REDACTED@REDACTED.com'
+    EMAIL_RECEIVER_ARN: arn:aws:ses:us-west-2:REDACTED:identity/REDACTED@REDACTED.com
+    EMAIL_RECEIVER: 'REDACTED@REDACTED.com'
+    JENKINS_URL: "http://jenkins.mxnet-ci.amazon-ml.com/"
+
