@@ -1,0 +1,55 @@
+[
+    {
+		"filepath": "caches",
+		"is_dir": 1
+	},
+	{
+		"filepath": "fingerprints",
+		"is_dir": 1
+	},
+	{
+		"filepath": "jobs/*/branches",
+		"is_dir": 1
+	},
+	{
+        "filepath": "jobs/*/builds",
+        "is_dir": 1
+    },
+    {
+		"filepath": "jobs/*/indexing",
+		"is_dir": 1
+	},
+	{
+		"filepath": "logs",
+		"is_dir": 1
+	},
+	{
+		"filepath": "users",
+		"is_dir": 1
+	},
+	{
+		"filepath": "workspace",
+		"is_dir": 1
+	},
+    {
+        "filepath": "updates",
+        "is_dir": 1
+    },
+
+	{
+		"filepath": "org.jenkinsci.plugins.workflow.flow.FlowExecutionList.xml",
+		"is_dir": 0
+	},
+	{
+		"filepath": "queue.xml.bak",
+		"is_dir": 0
+	},
+    {
+        "filepath": "queue.xml",
+        "is_dir": 0
+    },
+    {
+        "filepath": "jobs/*/nextBuildNumber",
+        "is_dir": 0
+    }
+]
