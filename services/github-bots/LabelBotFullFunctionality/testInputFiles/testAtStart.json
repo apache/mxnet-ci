@@ -1,0 +1,1 @@
+{'Records': [{'body': '{\'headers\': {\'X-GitHub-Event\': \'issue_comment\', \'X-Hub-Signature\': \'sha1=XXXXXXXXXXX\'}, \'body\': \'{"action":"created","comment":{"body":"@mxnet-label-bot add [bug, duplicate] more text after \\\\n"},"issue":{"number":0}}\'}'}]}

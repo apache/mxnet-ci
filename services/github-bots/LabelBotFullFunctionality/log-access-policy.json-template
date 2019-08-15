@@ -1,0 +1,22 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:UpdateAssumeRolePolicy",
+                "logs:DescribeLogGroups",
+                "logs:DescribeLogStreams",
+                "logs:GetLogEvents",
+                "logs:FilterLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:us-west-2:###HERE###:log-group:/aws/lambda/LabelBot-dev-label:*:*",
+                "arn:aws:logs:us-west-2:###HERE###:log-group:/aws/lambda/LabelBot-dev-send:*:*",
+                "arn:aws:logs:us-west-2:###HERE###:log-group:/aws/lambda/LabelBot-dev-label",
+                "arn:aws:logs:us-west-2:###HERE###:log-group:/aws/lambda/LabelBot-dev-send",
+                "arn:aws:iam::###HERE###:role/LabelBotLogAccessRole"
+            ]
+        }
+    ]
+}
