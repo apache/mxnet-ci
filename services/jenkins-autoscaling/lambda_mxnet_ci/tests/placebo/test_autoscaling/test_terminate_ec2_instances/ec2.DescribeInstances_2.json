@@ -1,0 +1,294 @@
+{
+    "status_code": 200,
+    "data": {
+        "Reservations": [
+            {
+                "Groups": [],
+                "Instances": [
+                    {
+                        "AmiLaunchIndex": 0,
+                        "ImageId": "ami-20e17d58",
+                        "InstanceId": "i-000000000000001",
+                        "InstanceType": "g3.8xlarge",
+                        "KeyName": "REDACTED",
+                        "LaunchTime": {
+                            "__class__": "datetime",
+                            "year": 2018,
+                            "month": 3,
+                            "day": 20,
+                            "hour": 15,
+                            "minute": 35,
+                            "second": 16,
+                            "microsecond": 0
+                        },
+                        "Monitoring": {
+                            "State": "disabled"
+                        },
+                        "Placement": {
+                            "AvailabilityZone": "us-west-2b",
+                            "GroupName": "",
+                            "Tenancy": "default"
+                        },
+                        "PrivateDnsName": "ip-172-31-30-54.us-west-2.compute.internal",
+                        "PrivateIpAddress": "172.31.30.54",
+                        "ProductCodes": [],
+                        "PublicDnsName": "ec2-34-209-91-146.us-west-2.compute.amazonaws.com",
+                        "PublicIpAddress": "34.209.91.146",
+                        "State": {
+                            "Code": 16,
+                            "Name": "running"
+                        },
+                        "StateTransitionReason": "",
+                        "SubnetId": "subnet-05d5d863",
+                        "VpcId": "vpc-02c00d7b",
+                        "Architecture": "x86_64",
+                        "BlockDeviceMappings": [],
+                        "ClientToken": "",
+                        "EbsOptimized": true,
+                        "EnaSupport": true,
+                        "Hypervisor": "xen",
+                        "IamInstanceProfile": {
+                            "Arn": "arn:aws:iam::REDACTED:instance-profile/jenkins_slave_profile",
+                            "Id": "AIPAIJA6M2HUUH6EQTA44"
+                        },
+                        "NetworkInterfaces": [],
+                        "RootDeviceName": "/dev/sda1",
+                        "RootDeviceType": "ebs",
+                        "SecurityGroups": [],
+                        "SourceDestCheck": true,
+                        "Tags": [
+                            {
+                                "Key": "Name",
+                                "Value": "terminate1"
+                            },
+                            {
+                                "Key": "label",
+                                "Value": "mxnetlinux-gpu"
+                            },
+                            {
+                                "Key": "AutoScaledSlave",
+                                "Value": "True"
+                            }
+                        ],
+                        "VirtualizationType": "hvm"
+                    },
+                    {
+                        "AmiLaunchIndex": 0,
+                        "ImageId": "ami-20e17d58",
+                        "InstanceId": "i-000000000000002",
+                        "InstanceType": "g3.8xlarge",
+                        "KeyName": "REDACTED",
+                        "LaunchTime": {
+                            "__class__": "datetime",
+                            "year": 2018,
+                            "month": 3,
+                            "day": 20,
+                            "hour": 15,
+                            "minute": 35,
+                            "second": 16,
+                            "microsecond": 0
+                        },
+                        "Monitoring": {
+                            "State": "disabled"
+                        },
+                        "Placement": {
+                            "AvailabilityZone": "us-west-2b",
+                            "GroupName": "",
+                            "Tenancy": "default"
+                        },
+                        "PrivateDnsName": "ip-172-31-30-54.us-west-2.compute.internal",
+                        "PrivateIpAddress": "172.31.30.54",
+                        "ProductCodes": [],
+                        "PublicDnsName": "ec2-34-209-91-146.us-west-2.compute.amazonaws.com",
+                        "PublicIpAddress": "34.209.91.146",
+                        "State": {
+                            "Code": 16,
+                            "Name": "running"
+                        },
+                        "StateTransitionReason": "",
+                        "SubnetId": "subnet-05d5d863",
+                        "VpcId": "vpc-02c00d7b",
+                        "Architecture": "x86_64",
+                        "BlockDeviceMappings": [],
+                        "ClientToken": "",
+                        "EbsOptimized": true,
+                        "EnaSupport": true,
+                        "Hypervisor": "xen",
+                        "IamInstanceProfile": {
+                            "Arn": "arn:aws:iam::REDACTED:instance-profile/jenkins_slave_profile",
+                            "Id": "AIPAIJA6M2HUUH6EQTA44"
+                        },
+                        "NetworkInterfaces": [],
+                        "RootDeviceName": "/dev/sda1",
+                        "RootDeviceType": "ebs",
+                        "SecurityGroups": [],
+                        "SourceDestCheck": true,
+                        "Tags": [
+                            {
+                                "Key": "Name",
+                                "Value": "terminate2"
+                            },
+                            {
+                                "Key": "label",
+                                "Value": "mxnetlinux-gpu"
+                            },
+                            {
+                                "Key": "AutoScaledSlave",
+                                "Value": "True"
+                            }
+                        ],
+                        "VirtualizationType": "hvm"
+                    },
+                    {
+                        "AmiLaunchIndex": 0,
+                        "ImageId": "ami-20e17d58",
+                        "InstanceId": "i-000000000000003",
+                        "InstanceType": "g3.8xlarge",
+                        "KeyName": "REDACTED",
+                        "LaunchTime": {
+                            "__class__": "datetime",
+                            "year": 2018,
+                            "month": 3,
+                            "day": 20,
+                            "hour": 15,
+                            "minute": 35,
+                            "second": 16,
+                            "microsecond": 0
+                        },
+                        "Monitoring": {
+                            "State": "disabled"
+                        },
+                        "Placement": {
+                            "AvailabilityZone": "us-west-2b",
+                            "GroupName": "",
+                            "Tenancy": "default"
+                        },
+                        "PrivateDnsName": "ip-172-31-30-54.us-west-2.compute.internal",
+                        "PrivateIpAddress": "172.31.30.54",
+                        "ProductCodes": [],
+                        "PublicDnsName": "ec2-34-209-91-146.us-west-2.compute.amazonaws.com",
+                        "PublicIpAddress": "34.209.91.146",
+                        "State": {
+                            "Code": 16,
+                            "Name": "running"
+                        },
+                        "StateTransitionReason": "",
+                        "SubnetId": "subnet-05d5d863",
+                        "VpcId": "vpc-02c00d7b",
+                        "Architecture": "x86_64",
+                        "BlockDeviceMappings": [],
+                        "ClientToken": "",
+                        "EbsOptimized": true,
+                        "EnaSupport": true,
+                        "Hypervisor": "xen",
+                        "IamInstanceProfile": {
+                            "Arn": "arn:aws:iam::REDACTED:instance-profile/jenkins_slave_profile",
+                            "Id": "AIPAIJA6M2HUUH6EQTA44"
+                        },
+                        "NetworkInterfaces": [],
+                        "RootDeviceName": "/dev/sda1",
+                        "RootDeviceType": "ebs",
+                        "SecurityGroups": [],
+                        "SourceDestCheck": true,
+                        "Tags": [
+                            {
+                                "Key": "Name",
+                                "Value": "terminate3"
+                            },
+                            {
+                                "Key": "label",
+                                "Value": "mxnetlinux-gpu"
+                            },
+                            {
+                                "Key": "AutoScaledSlave",
+                                "Value": "True"
+                            }
+                        ],
+                        "VirtualizationType": "hvm"
+                    },
+                    {
+                        "AmiLaunchIndex": 0,
+                        "ImageId": "ami-20e17d58",
+                        "InstanceId": "i-000000000000004",
+                        "InstanceType": "g3.8xlarge",
+                        "KeyName": "REDACTED",
+                        "LaunchTime": {
+                            "__class__": "datetime",
+                            "year": 2018,
+                            "month": 3,
+                            "day": 20,
+                            "hour": 15,
+                            "minute": 35,
+                            "second": 16,
+                            "microsecond": 0
+                        },
+                        "Monitoring": {
+                            "State": "disabled"
+                        },
+                        "Placement": {
+                            "AvailabilityZone": "us-west-2b",
+                            "GroupName": "",
+                            "Tenancy": "default"
+                        },
+                        "PrivateDnsName": "ip-172-31-30-54.us-west-2.compute.internal",
+                        "PrivateIpAddress": "172.31.30.54",
+                        "ProductCodes": [],
+                        "PublicDnsName": "ec2-34-209-91-146.us-west-2.compute.amazonaws.com",
+                        "PublicIpAddress": "34.209.91.146",
+                        "State": {
+                            "Code": 16,
+                            "Name": "running"
+                        },
+                        "StateTransitionReason": "",
+                        "SubnetId": "subnet-05d5d863",
+                        "VpcId": "vpc-02c00d7b",
+                        "Architecture": "x86_64",
+                        "BlockDeviceMappings": [],
+                        "ClientToken": "",
+                        "EbsOptimized": true,
+                        "EnaSupport": true,
+                        "Hypervisor": "xen",
+                        "IamInstanceProfile": {
+                            "Arn": "arn:aws:iam::REDACTED:instance-profile/jenkins_slave_profile",
+                            "Id": "AIPAIJA6M2HUUH6EQTA44"
+                        },
+                        "NetworkInterfaces": [],
+                        "RootDeviceName": "/dev/sda1",
+                        "RootDeviceType": "ebs",
+                        "SecurityGroups": [],
+                        "SourceDestCheck": true,
+                        "Tags": [
+                            {
+                                "Key": "Name",
+                                "Value": "terminate4"
+                            },
+                            {
+                                "Key": "label",
+                                "Value": "mxnetlinux-gpu"
+                            },
+                            {
+                                "Key": "AutoScaledSlave",
+                                "Value": "True"
+                            }
+                        ],
+                        "VirtualizationType": "hvm"
+                    }
+                ],
+                "OwnerId": "REDACTED",
+                "ReservationId": "r-07430200188ec23e1"
+            }
+        ],
+        "ResponseMetadata": {
+            "RequestId": "dfd97b82-c09d-455e-8bc4-cc2eb366f7ba",
+            "HTTPStatusCode": 200,
+            "HTTPHeaders": {
+                "content-type": "text/xml;charset=UTF-8",
+                "transfer-encoding": "chunked",
+                "vary": "Accept-Encoding",
+                "date": "Sun, 22 Apr 2018 23:08:29 GMT",
+                "server": "AmazonEC2"
+            },
+            "RetryAttempts": 0
+        }
+    }
+}
