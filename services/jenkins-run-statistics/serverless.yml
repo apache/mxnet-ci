@@ -1,0 +1,77 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+# Lambda configuration for jenkins run statistics
+
+service: JenkinsRunStatistics
+
+plugins:
+  - serverless-python-requirements
+
+provider:
+  name: aws
+  runtime: python3.7
+  region: us-west-2
+  stage: ${opt:stage}
+  environment: ${file(environment.yml):${self:provider.stage}}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_NAME}"
+
+    # Grant CloudWatch metric access
+    - Effect: "Allow"
+      Action:
+        - "cloudwatch:PutMetricData"
+      Resource:
+        - "*"
+
+functions:
+  jenkins_run_statistics:
+    name: JenkinsRunStatisticsHandler
+    handler: statistics.lambda_handler
+    reservedConcurrency: 1
+    timeout: 290
+    events:
+      - schedule: rate(5 minutes)
+
+resources:
+  Resources:
+    JenkinsRunsDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: FULL_JOB_NAME
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: FULL_JOB_NAME
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.DYNAMODB_TABLE_NAME}
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
