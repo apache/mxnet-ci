@@ -1,0 +1,63 @@
+{
+    "status_code": 200,
+    "data": {
+        "TerminatingInstances": [
+            {
+                "CurrentState": {
+                    "Code": 32,
+                    "Name": "shutting-down"
+                },
+                "InstanceId": "i-000000000000001",
+                "PreviousState": {
+                    "Code": 32,
+                    "Name": "shutting-down"
+                }
+            },
+            {
+                "CurrentState": {
+                    "Code": 32,
+                    "Name": "shutting-down"
+                },
+                "InstanceId": "i-000000000000002",
+                "PreviousState": {
+                    "Code": 32,
+                    "Name": "shutting-down"
+                }
+            },
+            {
+                "CurrentState": {
+                    "Code": 32,
+                    "Name": "shutting-down"
+                },
+                "InstanceId": "i-000000000000003",
+                "PreviousState": {
+                    "Code": 32,
+                    "Name": "shutting-down"
+                }
+            },
+            {
+                "CurrentState": {
+                    "Code": 32,
+                    "Name": "shutting-down"
+                },
+                "InstanceId": "i-000000000000004",
+                "PreviousState": {
+                    "Code": 32,
+                    "Name": "shutting-down"
+                }
+            }
+        ],
+        "ResponseMetadata": {
+            "RequestId": "0972567a-f24e-4dee-913c-0839e3ec8b36",
+            "HTTPStatusCode": 200,
+            "HTTPHeaders": {
+                "content-type": "text/xml;charset=UTF-8",
+                "transfer-encoding": "chunked",
+                "vary": "Accept-Encoding",
+                "date": "Sun, 22 Apr 2018 23:08:30 GMT",
+                "server": "AmazonEC2"
+            },
+            "RetryAttempts": 0
+        }
+    }
+}
