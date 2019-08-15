@@ -1,0 +1,8 @@
+[
+    {
+        "filepath": "config.xml",
+        "placeholder": "[GitHubSecurityRealm/clientSecret]",
+        "secret": "REDACTED",
+        "xpath": "/hudson/securityRealm[@class='org.jenkinsci.plugins.GithubSecurityRealm']/clientSecret"
+    }
+]

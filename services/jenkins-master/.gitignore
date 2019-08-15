@@ -1,0 +1,6 @@
+.terraform/
+jenkins.tar.bz2
+.terraform.tfstate.lock.info
+__pycache__/
+jenkins_plugins.tar.bz2
+temp/
