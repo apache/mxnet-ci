@@ -1,0 +1,76 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+# Lambda configuration for daily CI report
+# Please don't forget to verify the email addressed at
+# https://us-west-2.console.aws.amazon.com/ses/home?region=us-west-2#verified-senders-email
+
+service: RotateSecretsManagerCredentials
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+
+plugins:
+  - serverless-python-requirements
+  - serverless-s3-remover
+
+
+provider:
+  name: aws
+  runtime: python3.7
+  region: us-west-2
+  timeout: 290
+  stage: ${opt:stage}
+  environment: ${file(environment.yml):${self:provider.stage}}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+       - "secretsmanager:DescribeSecret"
+       - "secretsmanager:GetSecretValue"
+       - "secretsmanager:PutSecretValue"
+       - "secretsmanager:UpdateSecretVersionStage"
+       - "secretsmanager:RotateSecret"
+        
+      # This should actually only point to specific secrets, but we're unable to pass in a list because env var can only be strings 
+      Resource:
+       - "*"
+
+    - Effect: "Allow"
+      Action:
+        - "secretsmanager:GetRandomPassword"
+
+      Resource:
+        - "*"
+
+resources:
+  Resources:
+    # https://docs.aws.amazon.com/secretsmanager/latest/userguide/troubleshoot_rotation.html#tshoot-lambda-initialconfig-perms
+    LambdaPermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName:
+          Fn::GetAtt: DockerHubChangePasswordLambdaFunction.Arn
+        Action: lambda:InvokeFunction
+        Principal:
+          Fn::Join: ["",["secretsmanager.", { Ref: "AWS::URLSuffix"}]]
+
+functions:
+  DockerHubChangePassword:
+    name: SecretsManager_docker_hub_change_password_function
+    handler: docker_hub_change_password.lambda_handler
+    reservedConcurrency: 1
