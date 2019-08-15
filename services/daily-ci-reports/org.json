@@ -1,0 +1,1579 @@
+[
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "Broken_Link_Checker_Pipeline",
+    "estimatedDurationInMillis": 3035432,
+    "fullDisplayName": "Broken_Link_Checker_Pipeline",
+    "fullName": "Broken_Link_Checker_Pipeline",
+    "latestRun": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl$PipelineRunSummary",
+      "_links": {
+        "parent": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/"
+        },
+        "tests": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/runs/289/tests/"
+        },
+        "log": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/runs/289/log/"
+        },
+        "self": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/runs/289/"
+        },
+        "actions": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/runs/289/actions/"
+        },
+        "artifacts": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/Broken_Link_Checker_Pipeline/runs/289/artifacts/"
+        }
+      },
+      "actions": [],
+      "artifactsZipFile": null,
+      "causeOfBlockage": null,
+      "causes": [
+        {
+          "_class": "io.jenkins.blueocean.service.embedded.rest.AbstractRunImpl$BlueCauseImpl",
+          "shortDescription": "Started by upstream project \"restricted-website-publish\" build number 288",
+          "upstreamBuild": 288,
+          "upstreamProject": "restricted-website-publish",
+          "upstreamUrl": "job/restricted-website-publish/"
+        }
+      ],
+      "changeSet": [],
+      "description": null,
+      "durationInMillis": 3366356,
+      "enQueueTime": "2018-09-03T18:47:57.016+0000",
+      "endTime": "2018-09-03T19:44:03.376+0000",
+      "estimatedDurationInMillis": 3035432,
+      "id": "289",
+      "name": null,
+      "organization": "jenkins",
+      "pipeline": "Broken_Link_Checker_Pipeline",
+      "replayable": false,
+      "result": "FAILURE",
+      "runSummary": "broken since build #271",
+      "startTime": "2018-09-03T18:47:57.020+0000",
+      "state": "FINISHED",
+      "type": "WorkflowRun"
+    },
+    "name": "Broken_Link_Checker_Pipeline",
+    "organization": "jenkins",
+    "parameters": [],
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "weatherScore": 0
+  },
+  {
+    "_class": "io.jenkins.blueocean.service.embedded.rest.FreeStylePipeline",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "DailyTrigger",
+    "estimatedDurationInMillis": 30,
+    "fullDisplayName": "DailyTrigger",
+    "fullName": "DailyTrigger",
+    "latestRun": {
+      "_class": "io.jenkins.blueocean.service.embedded.rest.FreeStylePipeline$FreeStyleRunSummary",
+      "_links": {
+        "parent": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/"
+        },
+        "tests": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/runs/7/tests/"
+        },
+        "log": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/runs/7/log/"
+        },
+        "self": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/runs/7/"
+        },
+        "actions": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/runs/7/actions/"
+        },
+        "artifacts": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/DailyTrigger/runs/7/artifacts/"
+        }
+      },
+      "actions": [],
+      "artifactsZipFile": null,
+      "causeOfBlockage": null,
+      "causes": [
+        {
+          "_class": "io.jenkins.blueocean.service.embedded.rest.AbstractRunImpl$BlueCauseImpl",
+          "shortDescription": "Started by timer"
+        }
+      ],
+      "changeSet": [],
+      "description": null,
+      "durationInMillis": 28,
+      "enQueueTime": "2018-09-03T19:41:00.858+0000",
+      "endTime": "2018-09-03T19:41:00.890+0000",
+      "estimatedDurationInMillis": 30,
+      "id": "7",
+      "name": null,
+      "organization": "jenkins",
+      "pipeline": "DailyTrigger",
+      "replayable": false,
+      "result": "SUCCESS",
+      "runSummary": "stable",
+      "startTime": "2018-09-03T19:41:00.862+0000",
+      "state": "FINISHED",
+      "type": "FreeStyleBuild"
+    },
+    "name": "DailyTrigger",
+    "organization": "jenkins",
+    "parameters": [],
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "weatherScore": 100
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.MultiBranchPipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/edge-fork-incubator-mxnet/"
+      },
+      "branches": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/edge-fork-incubator-mxnet/branches/"
+      },
+      "scm": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/edge-fork-incubator-mxnet/scm/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/edge-fork-incubator-mxnet/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/edge-fork-incubator-mxnet/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/edge-fork-incubator-mxnet/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/edge-fork-incubator-mxnet/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "edge-fork-incubator-mxnet",
+    "fullDisplayName": "edge-fork-incubator-mxnet",
+    "fullName": "edge-fork-incubator-mxnet",
+    "name": "edge-fork-incubator-mxnet",
+    "organization": "jenkins",
+    "parameters": null,
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "estimatedDurationInMillis": 2830,
+    "numberOfFolders": 0,
+    "numberOfPipelines": 0,
+    "pipelineFolderNames": [],
+    "weatherScore": 100,
+    "branchNames": [
+      "PR-1"
+    ],
+    "numberOfFailingBranches": 0,
+    "numberOfFailingPullRequests": 0,
+    "numberOfSuccessfulBranches": 0,
+    "numberOfSuccessfulPullRequests": 0,
+    "scmSource": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.scm.ScmSourceImpl",
+      "apiUrl": null,
+      "id": "github"
+    },
+    "totalNumberOfBranches": 0,
+    "totalNumberOfPullRequests": 1
+  },
+  {
+    "_class": "io.jenkins.blueocean.service.embedded.rest.FreeStylePipeline",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "HourlyTrigger",
+    "estimatedDurationInMillis": 29,
+    "fullDisplayName": "HourlyTrigger",
+    "fullName": "HourlyTrigger",
+    "latestRun": {
+      "_class": "io.jenkins.blueocean.service.embedded.rest.FreeStylePipeline$FreeStyleRunSummary",
+      "_links": {
+        "parent": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/"
+        },
+        "tests": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/runs/25/tests/"
+        },
+        "log": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/runs/25/log/"
+        },
+        "self": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/runs/25/"
+        },
+        "actions": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/runs/25/actions/"
+        },
+        "artifacts": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/HourlyTrigger/runs/25/artifacts/"
+        }
+      },
+      "actions": [],
+      "artifactsZipFile": null,
+      "causeOfBlockage": null,
+      "causes": [
+        {
+          "_class": "io.jenkins.blueocean.service.embedded.rest.AbstractRunImpl$BlueCauseImpl",
+          "shortDescription": "Started by timer"
+        }
+      ],
+      "changeSet": [],
+      "description": null,
+      "durationInMillis": 29,
+      "enQueueTime": "2018-09-04T14:47:00.859+0000",
+      "endTime": "2018-09-04T14:47:00.891+0000",
+      "estimatedDurationInMillis": 29,
+      "id": "25",
+      "name": null,
+      "organization": "jenkins",
+      "pipeline": "HourlyTrigger",
+      "replayable": false,
+      "result": "SUCCESS",
+      "runSummary": "stable",
+      "startTime": "2018-09-04T14:47:00.862+0000",
+      "state": "FINISHED",
+      "type": "FreeStyleBuild"
+    },
+    "name": "HourlyTrigger",
+    "organization": "jenkins",
+    "parameters": [],
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "weatherScore": 100
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.MultiBranchPipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/incubator-mxnet/"
+      },
+      "branches": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/incubator-mxnet/branches/"
+      },
+      "scm": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/incubator-mxnet/scm/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/incubator-mxnet/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/incubator-mxnet/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/incubator-mxnet/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/incubator-mxnet/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "incubator-mxnet",
+    "fullDisplayName": "incubator-mxnet",
+    "fullName": "incubator-mxnet",
+    "name": "incubator-mxnet",
+    "organization": "jenkins",
+    "parameters": null,
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "estimatedDurationInMillis": 11631,
+    "numberOfFolders": 0,
+    "numberOfPipelines": 15,
+    "pipelineFolderNames": [],
+    "weatherScore": 60,
+    "branchNames": [
+      "master",
+      "PR-12365",
+      "PR-12382",
+      "PR-11991",
+      "PR-12445",
+      "PR-12451",
+      "PR-12182",
+      "PR-12447",
+      "v1.3.x",
+      "PR-12448",
+      "PR-12446",
+      "PR-12361",
+      "PR-12352",
+      "PR-12443",
+      "PR-12441",
+      "PR-12440",
+      "PR-12376",
+      "PR-12356",
+      "PR-12355",
+      "PR-12436",
+      "PR-12429",
+      "PR-12387",
+      "PR-12430",
+      "PR-12412",
+      "PR-12427",
+      "PR-12402",
+      "PR-12385",
+      "PR-12424",
+      "PR-12419",
+      "PR-11641",
+      "PR-12426",
+      "update-data-desc-clojure",
+      "PR-12094",
+      "PR-12423",
+      "PR-12422",
+      "PR-12420",
+      "PR-11301",
+      "PR-10149",
+      "PR-12391",
+      "PR-12418",
+      "PR-12411",
+      "PR-12413",
+      "PR-12102",
+      "PR-12388",
+      "PR-12414",
+      "PR-12019",
+      "PR-12410",
+      "PR-12408",
+      "PR-12331",
+      "PR-12157",
+      "terrytangyuan-patch-1",
+      "PR-12290",
+      "PR-12400",
+      "PR-12399",
+      "PR-12397",
+      "PR-12398",
+      "PR-12396",
+      "PR-12162",
+      "PR-12379",
+      "PR-12378",
+      "PR-12007",
+      "PR-12386",
+      "PR-12306",
+      "PR-11952",
+      "PR-12381",
+      "PR-12374",
+      "PR-12380",
+      "PR-12336",
+      "PR-12360",
+      "PR-12370",
+      "PR-12375",
+      "PR-12371",
+      "PR-11948",
+      "PR-12343",
+      "PR-11148",
+      "PR-12287",
+      "PR-12350",
+      "PR-12367",
+      "PR-12340",
+      "PR-12368",
+      "PR-12042",
+      "PR-12362",
+      "PR-12358",
+      "PR-12282",
+      "PR-12357",
+      "PR-12354",
+      "PR-12349",
+      "PR-12348",
+      "PR-12323",
+      "PR-12347",
+      "PR-12315",
+      "PR-12346",
+      "PR-12291",
+      "PR-12344",
+      "PR-12339",
+      "PR-12342",
+      "PR-12338",
+      "PR-12230",
+      "PR-12311",
+      "PR-12328"
+    ],
+    "numberOfFailingBranches": 11,
+    "numberOfFailingPullRequests": 409,
+    "numberOfSuccessfulBranches": 4,
+    "numberOfSuccessfulPullRequests": 1748,
+    "scmSource": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.scm.ScmSourceImpl",
+      "apiUrl": null,
+      "id": "github"
+    },
+    "totalNumberOfBranches": 15,
+    "totalNumberOfPullRequests": 2178
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.MultiBranchPipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests/"
+      },
+      "branches": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests/branches/"
+      },
+      "scm": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests/scm/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "NightlyTests",
+    "fullDisplayName": "NightlyTests",
+    "fullName": "NightlyTests",
+    "name": "NightlyTests",
+    "organization": "jenkins",
+    "parameters": null,
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "estimatedDurationInMillis": 2384,
+    "numberOfFolders": 0,
+    "numberOfPipelines": 8,
+    "pipelineFolderNames": [],
+    "weatherScore": 80,
+    "branchNames": [
+      "master",
+      "v1.3.x",
+      "v0.11.0",
+      "v0.12.0",
+      "v1.0.0",
+      "v1.1.0",
+      "v1.2.0-java",
+      "v1.2.0"
+    ],
+    "numberOfFailingBranches": 6,
+    "numberOfFailingPullRequests": 0,
+    "numberOfSuccessfulBranches": 1,
+    "numberOfSuccessfulPullRequests": 0,
+    "scmSource": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.scm.ScmSourceImpl",
+      "apiUrl": null,
+      "id": "github"
+    },
+    "totalNumberOfBranches": 8,
+    "totalNumberOfPullRequests": 0
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "NightlyTests_onBinaries",
+    "estimatedDurationInMillis": 4006414,
+    "fullDisplayName": "NightlyTests_onBinaries",
+    "fullName": "NightlyTests_onBinaries",
+    "latestRun": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl$PipelineRunSummary",
+      "_links": {
+        "parent": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/"
+        },
+        "tests": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/runs/140/tests/"
+        },
+        "log": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/runs/140/log/"
+        },
+        "self": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/runs/140/"
+        },
+        "actions": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/runs/140/actions/"
+        },
+        "artifacts": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onBinaries/runs/140/artifacts/"
+        }
+      },
+      "actions": [],
+      "artifactsZipFile": null,
+      "causeOfBlockage": null,
+      "causes": [
+        {
+          "_class": "io.jenkins.blueocean.service.embedded.rest.AbstractRunImpl$BlueCauseImpl",
+          "shortDescription": "Started by timer"
+        }
+      ],
+      "changeSet": [],
+      "description": null,
+      "durationInMillis": 4201192,
+      "enQueueTime": "2018-09-04T00:47:00.861+0000",
+      "endTime": "2018-09-04T01:57:02.059+0000",
+      "estimatedDurationInMillis": 4006414,
+      "id": "140",
+      "name": null,
+      "organization": "jenkins",
+      "pipeline": "NightlyTests_onBinaries",
+      "replayable": false,
+      "result": "SUCCESS",
+      "runSummary": "stable",
+      "startTime": "2018-09-04T00:47:00.867+0000",
+      "state": "FINISHED",
+      "type": "WorkflowRun"
+    },
+    "name": "NightlyTests_onBinaries",
+    "organization": "jenkins",
+    "parameters": [],
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "weatherScore": 100
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "NightlyTests_onSource",
+    "estimatedDurationInMillis": 1716116,
+    "fullDisplayName": "NightlyTests_onSource",
+    "fullName": "NightlyTests_onSource",
+    "latestRun": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl$PipelineRunSummary",
+      "_links": {
+        "parent": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/"
+        },
+        "tests": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/runs/212/tests/"
+        },
+        "log": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/runs/212/log/"
+        },
+        "self": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/runs/212/"
+        },
+        "actions": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/runs/212/actions/"
+        },
+        "artifacts": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTests_onSource/runs/212/artifacts/"
+        }
+      },
+      "actions": [],
+      "artifactsZipFile": null,
+      "causeOfBlockage": null,
+      "causes": [
+        {
+          "_class": "io.jenkins.blueocean.service.embedded.rest.AbstractRunImpl$BlueCauseImpl",
+          "shortDescription": "Started by timer"
+        }
+      ],
+      "changeSet": [],
+      "description": null,
+      "durationInMillis": 1727680,
+      "enQueueTime": "2018-09-04T01:25:00.857+0000",
+      "endTime": "2018-09-04T01:53:48.543+0000",
+      "estimatedDurationInMillis": 1716116,
+      "id": "212",
+      "name": null,
+      "organization": "jenkins",
+      "pipeline": "NightlyTests_onSource",
+      "replayable": false,
+      "result": "SUCCESS",
+      "runSummary": "stable",
+      "startTime": "2018-09-04T01:25:00.863+0000",
+      "state": "FINISHED",
+      "type": "WorkflowRun"
+    },
+    "name": "NightlyTests_onSource",
+    "organization": "jenkins",
+    "parameters": [],
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "weatherScore": 100
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.MultiBranchPipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTestsForBinaries/"
+      },
+      "branches": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTestsForBinaries/branches/"
+      },
+      "scm": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTestsForBinaries/scm/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTestsForBinaries/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTestsForBinaries/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTestsForBinaries/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/NightlyTestsForBinaries/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "NightlyTestsForBinaries",
+    "fullDisplayName": "NightlyTestsForBinaries",
+    "fullName": "NightlyTestsForBinaries",
+    "name": "NightlyTestsForBinaries",
+    "organization": "jenkins",
+    "parameters": null,
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "estimatedDurationInMillis": 3552,
+    "numberOfFolders": 0,
+    "numberOfPipelines": 2,
+    "pipelineFolderNames": [],
+    "weatherScore": 100,
+    "branchNames": [
+      "master",
+      "v1.3.x"
+    ],
+    "numberOfFailingBranches": 0,
+    "numberOfFailingPullRequests": 0,
+    "numberOfSuccessfulBranches": 2,
+    "numberOfSuccessfulPullRequests": 0,
+    "scmSource": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.scm.ScmSourceImpl",
+      "apiUrl": null,
+      "id": "github"
+    },
+    "totalNumberOfBranches": 2,
+    "totalNumberOfPullRequests": 0
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "restricted-backwards-compatibility-checker",
+    "estimatedDurationInMillis": 415765,
+    "fullDisplayName": "restricted-backwards-compatibility-checker",
+    "fullName": "restricted-backwards-compatibility-checker",
+    "latestRun": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl$PipelineRunSummary",
+      "_links": {
+        "parent": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/"
+        },
+        "tests": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/runs/46/tests/"
+        },
+        "log": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/runs/46/log/"
+        },
+        "self": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/runs/46/"
+        },
+        "actions": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/runs/46/actions/"
+        },
+        "artifacts": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-backwards-compatibility-checker/runs/46/artifacts/"
+        }
+      },
+      "actions": [],
+      "artifactsZipFile": null,
+      "causeOfBlockage": null,
+      "causes": [
+        {
+          "_class": "io.jenkins.blueocean.service.embedded.rest.AbstractRunImpl$BlueCauseImpl",
+          "shortDescription": "Started by timer"
+        }
+      ],
+      "changeSet": [],
+      "description": null,
+      "durationInMillis": 586608,
+      "enQueueTime": "2018-09-04T06:29:00.857+0000",
+      "endTime": "2018-09-04T06:38:47.469+0000",
+      "estimatedDurationInMillis": 415765,
+      "id": "46",
+      "name": null,
+      "organization": "jenkins",
+      "pipeline": "restricted-backwards-compatibility-checker",
+      "replayable": false,
+      "result": "SUCCESS",
+      "runSummary": "stable",
+      "startTime": "2018-09-04T06:29:00.861+0000",
+      "state": "FINISHED",
+      "type": "WorkflowRun"
+    },
+    "name": "restricted-backwards-compatibility-checker",
+    "organization": "jenkins",
+    "parameters": [],
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "weatherScore": 100
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.MultiBranchPipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-BackwardsCompatibilityChecker/"
+      },
+      "branches": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-BackwardsCompatibilityChecker/branches/"
+      },
+      "scm": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-BackwardsCompatibilityChecker/scm/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-BackwardsCompatibilityChecker/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-BackwardsCompatibilityChecker/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-BackwardsCompatibilityChecker/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-BackwardsCompatibilityChecker/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "restricted-BackwardsCompatibilityChecker",
+    "fullDisplayName": "restricted-BackwardsCompatibilityChecker",
+    "fullName": "restricted-BackwardsCompatibilityChecker",
+    "name": "restricted-BackwardsCompatibilityChecker",
+    "organization": "jenkins",
+    "parameters": null,
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "estimatedDurationInMillis": 5023,
+    "numberOfFolders": 0,
+    "numberOfPipelines": 2,
+    "pipelineFolderNames": [],
+    "weatherScore": 0,
+    "branchNames": [
+      "master",
+      "v1.3.x"
+    ],
+    "numberOfFailingBranches": 2,
+    "numberOfFailingPullRequests": 0,
+    "numberOfSuccessfulBranches": 0,
+    "numberOfSuccessfulPullRequests": 0,
+    "scmSource": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.scm.ScmSourceImpl",
+      "apiUrl": null,
+      "id": "github"
+    },
+    "totalNumberOfBranches": 2,
+    "totalNumberOfPullRequests": 0
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.MultiBranchPipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-docker-cache-refresh/"
+      },
+      "branches": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-docker-cache-refresh/branches/"
+      },
+      "scm": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-docker-cache-refresh/scm/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-docker-cache-refresh/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-docker-cache-refresh/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-docker-cache-refresh/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-docker-cache-refresh/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "restricted-docker-cache-refresh",
+    "fullDisplayName": "restricted-docker-cache-refresh",
+    "fullName": "restricted-docker-cache-refresh",
+    "name": "restricted-docker-cache-refresh",
+    "organization": "jenkins",
+    "parameters": null,
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "estimatedDurationInMillis": 12394,
+    "numberOfFolders": 0,
+    "numberOfPipelines": 1,
+    "pipelineFolderNames": [],
+    "weatherScore": 100,
+    "branchNames": [
+      "master"
+    ],
+    "numberOfFailingBranches": 0,
+    "numberOfFailingPullRequests": 0,
+    "numberOfSuccessfulBranches": 1,
+    "numberOfSuccessfulPullRequests": 0,
+    "scmSource": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.scm.ScmSourceImpl",
+      "apiUrl": null,
+      "id": "github"
+    },
+    "totalNumberOfBranches": 1,
+    "totalNumberOfPullRequests": 0
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "restricted-website-build",
+    "estimatedDurationInMillis": 1938357,
+    "fullDisplayName": "restricted-website-build",
+    "fullName": "restricted-website-build",
+    "latestRun": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl$PipelineRunSummary",
+      "_links": {
+        "parent": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/"
+        },
+        "tests": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/runs/320/tests/"
+        },
+        "log": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/runs/320/log/"
+        },
+        "self": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/runs/320/"
+        },
+        "actions": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/runs/320/actions/"
+        },
+        "artifacts": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-build/runs/320/artifacts/"
+        }
+      },
+      "actions": [],
+      "artifactsZipFile": null,
+      "causeOfBlockage": null,
+      "causes": [
+        {
+          "_class": "io.jenkins.blueocean.service.embedded.rest.AbstractRunImpl$BlueCauseImpl",
+          "shortDescription": "Started by timer"
+        }
+      ],
+      "changeSet": [],
+      "description": null,
+      "durationInMillis": 892913,
+      "enQueueTime": "2018-09-04T12:14:00.863+0000",
+      "endTime": "2018-09-04T12:28:53.781+0000",
+      "estimatedDurationInMillis": 1938357,
+      "id": "320",
+      "name": null,
+      "organization": "jenkins",
+      "pipeline": "restricted-website-build",
+      "replayable": false,
+      "result": "FAILURE",
+      "runSummary": "broken since build #318",
+      "startTime": "2018-09-04T12:14:00.868+0000",
+      "state": "FINISHED",
+      "type": "WorkflowRun"
+    },
+    "name": "restricted-website-build",
+    "organization": "jenkins",
+    "parameters": [
+      {
+        "_class": "hudson.model.StringParameterDefinition",
+        "defaultParameterValue": {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "tags_to_build",
+          "value": "\"master;v1.2.0;v1.1.0;v1.0.0;v0.12.0;v0.11.0\""
+        },
+        "description": "What tag or branch should be built?\nBranches have a 'v' in front, while tags do not.\nBranches are updated/patched, while tags are not.\nThe site is better off using branches, so the API docs don't have buggy info.",
+        "name": "tags_to_build",
+        "type": "StringParameterDefinition"
+      },
+      {
+        "_class": "hudson.model.StringParameterDefinition",
+        "defaultParameterValue": {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "tag_list",
+          "value": "\"master;1.2.1;1.1.0;1.0.0;0.12.1;0.11.0\""
+        },
+        "description": "What tags should the site display in the dropdown?\nThe order should match the tags_to_build parameter exactly.\nExample: \"master;1.2.1\" matches tags_to_build if it had \"master;1.2.0\".\nThe job would build the 1.2.0 branch, but display 1.2.1 on the site.",
+        "name": "tag_list",
+        "type": "StringParameterDefinition"
+      },
+      {
+        "_class": "hudson.model.StringParameterDefinition",
+        "defaultParameterValue": {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "fork",
+          "value": "https://github.com/apache/incubator-mxnet.git"
+        },
+        "description": "The fork to use. Can be a contributor's development fork. Production should be:\nhttps://github.com/apache/incubator-mxnet.git",
+        "name": "fork",
+        "type": "StringParameterDefinition"
+      },
+      {
+        "_class": "hudson.model.StringParameterDefinition",
+        "defaultParameterValue": {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "tag_default",
+          "value": "\"master\""
+        },
+        "description": "",
+        "name": "tag_default",
+        "type": "StringParameterDefinition"
+      },
+      {
+        "_class": "hudson.model.StringParameterDefinition",
+        "defaultParameterValue": {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "domain",
+          "value": "http://mxnet.incubator.apache.org/"
+        },
+        "description": "Use your staging server addess, like:\nhttp://107.21.90.138/\n\nOr production address, like:\nhttp://mxnet.incubator.apache.org/\n\nTrailing slash is required.",
+        "name": "domain",
+        "type": "StringParameterDefinition"
+      }
+    ],
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "weatherScore": 40
+  },
+  {
+    "_class": "io.jenkins.blueocean.service.embedded.rest.FreeStylePipeline",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "restricted-website-publish",
+    "estimatedDurationInMillis": 31390,
+    "fullDisplayName": "restricted-website-publish",
+    "fullName": "restricted-website-publish",
+    "latestRun": {
+      "_class": "io.jenkins.blueocean.service.embedded.rest.FreeStylePipeline$FreeStyleRunSummary",
+      "_links": {
+        "parent": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/"
+        },
+        "tests": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/runs/288/tests/"
+        },
+        "log": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/runs/288/log/"
+        },
+        "self": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/runs/288/"
+        },
+        "actions": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/runs/288/actions/"
+        },
+        "artifacts": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/restricted-website-publish/runs/288/artifacts/"
+        }
+      },
+      "actions": [],
+      "artifactsZipFile": null,
+      "causeOfBlockage": null,
+      "causes": [
+        {
+          "_class": "io.jenkins.blueocean.service.embedded.rest.AbstractRunImpl$BlueCauseImpl",
+          "shortDescription": "Started by upstream project \"restricted-website-build\" build number 317",
+          "upstreamBuild": 317,
+          "upstreamProject": "restricted-website-build",
+          "upstreamUrl": "job/restricted-website-build/"
+        }
+      ],
+      "changeSet": [],
+      "description": null,
+      "durationInMillis": 31918,
+      "enQueueTime": "2018-09-03T18:47:17.014+0000",
+      "endTime": "2018-09-03T18:47:48.936+0000",
+      "estimatedDurationInMillis": 31390,
+      "id": "288",
+      "name": null,
+      "organization": "jenkins",
+      "pipeline": "restricted-website-publish",
+      "replayable": false,
+      "result": "SUCCESS",
+      "runSummary": "stable",
+      "startTime": "2018-09-03T18:47:17.018+0000",
+      "state": "FINISHED",
+      "type": "FreeStyleBuild"
+    },
+    "name": "restricted-website-publish",
+    "organization": "jenkins",
+    "parameters": [],
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "weatherScore": 100
+  },
+  {
+    "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "test-website-build",
+    "estimatedDurationInMillis": 2207940,
+    "fullDisplayName": "test-website-build",
+    "fullName": "test-website-build",
+    "latestRun": {
+      "_class": "io.jenkins.blueocean.rest.impl.pipeline.PipelineImpl$PipelineRunSummary",
+      "_links": {
+        "parent": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/"
+        },
+        "tests": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/runs/26/tests/"
+        },
+        "log": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/runs/26/log/"
+        },
+        "self": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/runs/26/"
+        },
+        "actions": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/runs/26/actions/"
+        },
+        "artifacts": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-build/runs/26/artifacts/"
+        }
+      },
+      "actions": [],
+      "artifactsZipFile": "/job/test-website-build/26/artifact/*zip*/archive.zip",
+      "causeOfBlockage": null,
+      "causes": [
+        {
+          "_class": "io.jenkins.blueocean.service.embedded.rest.AbstractRunImpl$BlueCauseImpl",
+          "shortDescription": "Started by user Aaron Markham",
+          "userId": "aaronmarkham",
+          "userName": "Aaron Markham"
+        }
+      ],
+      "changeSet": [],
+      "description": null,
+      "durationInMillis": 1296463,
+      "enQueueTime": "2018-08-16T21:17:48.605+0000",
+      "endTime": "2018-08-16T21:39:25.071+0000",
+      "estimatedDurationInMillis": 2207940,
+      "id": "26",
+      "name": null,
+      "organization": "jenkins",
+      "pipeline": "test-website-build",
+      "replayable": false,
+      "result": "SUCCESS",
+      "runSummary": "stable",
+      "startTime": "2018-08-16T21:17:48.608+0000",
+      "state": "FINISHED",
+      "type": "WorkflowRun"
+    },
+    "name": "test-website-build",
+    "organization": "jenkins",
+    "parameters": [
+      {
+        "_class": "hudson.model.StringParameterDefinition",
+        "defaultParameterValue": {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "tags_to_build",
+          "value": "\"sphinx_error_reduction;v1.2.0;v1.1.0;v1.0.0;v0.12.0;v0.11.0\""
+        },
+        "description": "What tag or branch should be built?\nBranches have a 'v' in front, while tags do not.\nBranches are updated/patched, while tags are not.\nThe site is better off using branches, so the API docs don't have buggy info.",
+        "name": "tags_to_build",
+        "type": "StringParameterDefinition"
+      },
+      {
+        "_class": "hudson.model.StringParameterDefinition",
+        "defaultParameterValue": {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "tag_list",
+          "value": "\"sphinx_error_reduction;1.2.1;1.1.0;1.0.0;0.12.1;0.11.0\""
+        },
+        "description": "What tags should the site display in the dropdown?\nThe order should match the tags_to_build parameter exactly.\nExample: \"master;1.2.1\" matches tags_to_build if it had \"master;1.2.0\".\nThe job would build the 1.2.0 branch, but display 1.2.1 on the site.",
+        "name": "tag_list",
+        "type": "StringParameterDefinition"
+      },
+      {
+        "_class": "hudson.model.StringParameterDefinition",
+        "defaultParameterValue": {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "fork",
+          "value": "https://github.com/aaronmarkham/incubator-mxnet.git"
+        },
+        "description": "The fork to use. Can be a contributor's development fork:\nhttps://github.com/aaronmarkham/incubator-mxnet.git\nProduction should be:\nhttps://github.com/apache/incubator-mxnet.git",
+        "name": "fork",
+        "type": "StringParameterDefinition"
+      },
+      {
+        "_class": "hudson.model.StringParameterDefinition",
+        "defaultParameterValue": {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "tag_default",
+          "value": "\"sphinx_error_reduction\""
+        },
+        "description": "",
+        "name": "tag_default",
+        "type": "StringParameterDefinition"
+      },
+      {
+        "_class": "hudson.model.StringParameterDefinition",
+        "defaultParameterValue": {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "domain",
+          "value": "http://34.201.8.176/"
+        },
+        "description": "Use your staging server addess, like:\nhttp://34.201.8.176/\n\nOr production address, like:\nhttp://mxnet.incubator.apache.org/\n\nTrailing slash is required.",
+        "name": "domain",
+        "type": "StringParameterDefinition"
+      }
+    ],
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "weatherScore": 100
+  },
+  {
+    "_class": "io.jenkins.blueocean.service.embedded.rest.FreeStylePipeline",
+    "_links": {
+      "self": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/"
+      },
+      "runs": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/runs/"
+      },
+      "actions": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/actions/"
+      },
+      "trends": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/trends/"
+      },
+      "queue": {
+        "_class": "io.jenkins.blueocean.rest.hal.Link",
+        "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/queue/"
+      }
+    },
+    "actions": [],
+    "displayName": "test-website-publish",
+    "estimatedDurationInMillis": 25398,
+    "fullDisplayName": "test-website-publish",
+    "fullName": "test-website-publish",
+    "latestRun": {
+      "_class": "io.jenkins.blueocean.service.embedded.rest.FreeStylePipeline$FreeStyleRunSummary",
+      "_links": {
+        "parent": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/"
+        },
+        "tests": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/runs/5/tests/"
+        },
+        "log": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/runs/5/log/"
+        },
+        "self": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/runs/5/"
+        },
+        "actions": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/runs/5/actions/"
+        },
+        "artifacts": {
+          "_class": "io.jenkins.blueocean.rest.hal.Link",
+          "href": "/blue/rest/organizations/jenkins/pipelines/test-website-publish/runs/5/artifacts/"
+        }
+      },
+      "actions": [],
+      "artifactsZipFile": null,
+      "causeOfBlockage": null,
+      "causes": [
+        {
+          "_class": "io.jenkins.blueocean.service.embedded.rest.AbstractRunImpl$BlueCauseImpl",
+          "shortDescription": "Started by upstream project \"test-website-build\" build number 26",
+          "upstreamBuild": 26,
+          "upstreamProject": "test-website-build",
+          "upstreamUrl": "job/test-website-build/"
+        }
+      ],
+      "changeSet": [],
+      "description": null,
+      "durationInMillis": 25910,
+      "enQueueTime": "2018-08-16T21:38:59.041+0000",
+      "endTime": "2018-08-16T21:39:24.954+0000",
+      "estimatedDurationInMillis": 25398,
+      "id": "5",
+      "name": null,
+      "organization": "jenkins",
+      "pipeline": "test-website-publish",
+      "replayable": false,
+      "result": "SUCCESS",
+      "runSummary": "stable",
+      "startTime": "2018-08-16T21:38:59.044+0000",
+      "state": "FINISHED",
+      "type": "FreeStyleBuild"
+    },
+    "name": "test-website-publish",
+    "organization": "jenkins",
+    "parameters": [],
+    "permissions": {
+      "create": false,
+      "configure": false,
+      "read": true,
+      "start": false,
+      "stop": false
+    },
+    "weatherScore": 100
+  }
+]

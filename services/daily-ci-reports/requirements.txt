@@ -1,0 +1,4 @@
+python-dateutil
+Jinja2>=2.10.1
+pydantic==0.13
+boto3
