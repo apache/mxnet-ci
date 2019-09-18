@@ -33,3 +33,12 @@ With difference instance type (overriding variables)
 ```
 terraform apply -var instance_type=c1.xlarge
 ```
+
+# Notes
+
+- The CI master server is responsible for updating the CI check status to GitHub in each of the PRs. Using EC2's default DNS sometimes result in DNS resolution failure and thus a failed status update. It's better to have multiple reliable DNS servers as backup. The following servers are recommended:
+```
+1.1.1.1 # Cloudflare
+8.8.8.8 # Google
+208.67.222.222 # OpenDNS
+```
