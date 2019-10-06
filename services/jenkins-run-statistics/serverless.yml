@@ -29,15 +29,15 @@ provider:
   stage: ${opt:stage}
   environment: ${file(environment.yml):${self:provider.stage}}
   iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_NAME}"
+    # - Effect: Allow
+    #   Action:
+    #     - dynamodb:Query
+    #     - dynamodb:Scan
+    #     - dynamodb:GetItem
+    #     - dynamodb:PutItem
+    #     - dynamodb:UpdateItem
+    #     - dynamodb:DeleteItem
+    #   Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_NAME}"
 
     # Grant CloudWatch metric access
     - Effect: "Allow"
@@ -47,13 +47,13 @@ provider:
         - "*"
 
 functions:
-  - jenkins_run_statistics:
-      name: JenkinsRunStatisticsHandler
-      handler: statistics.lambda_handler
-      reservedConcurrency: 1
-      timeout: 290
-      events:
-        - schedule: rate(5 minutes)
+  # - jenkins_run_statistics:
+  #     name: JenkinsRunStatisticsHandler
+  #     handler: statistics.lambda_handler
+  #     reservedConcurrency: 1
+  #     timeout: 290
+  #     events:
+  #       - schedule: rate(5 minutes)
   - jenkins_unit_tests:
       name: JenkinsUnitTests
       handler: unittests.lambda_handler
@@ -61,26 +61,26 @@ functions:
       timeout: 290
       events:
         - s3:
-            bucket: <serverless variable>
+            bucket: ${self:provider.environment.UNITTEST_ARTIFACT_REPOSITORY}
             event: s3:ObjectCreated:put
             existing: true
 
 resources:
   Resources:
-    JenkinsRunsDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          -
-            AttributeName: FULL_JOB_NAME
-            AttributeType: S
-        KeySchema:
-          -
-            AttributeName: FULL_JOB_NAME
-            KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.DYNAMODB_TABLE_NAME}
+    # JenkinsRunsDynamoDbTable:
+    #   Type: 'AWS::DynamoDB::Table'
+    #   DeletionPolicy: Retain
+    #   Properties:
+    #     AttributeDefinitions:
+    #       -
+    #         AttributeName: FULL_JOB_NAME
+    #         AttributeType: S
+    #     KeySchema:
+    #       -
+    #         AttributeName: FULL_JOB_NAME
+    #         KeyType: HASH
+    #     BillingMode: PAY_PER_REQUEST
+    #     TableName: ${self:provider.environment.DYNAMODB_TABLE_NAME}
 
 custom:
   pythonRequirements:
