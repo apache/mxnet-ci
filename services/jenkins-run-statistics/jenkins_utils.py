@@ -244,7 +244,11 @@ def _retrieve_jenkins_jobs(jenkins_url):
     :return: Array of JenkinsJobs
     """
     session = XMLSession()
-    r = session.get(url=jenkins_url + JENKINS_ALL_RUNS_API)
+    try:
+        r = session.get(url=jenkins_url + JENKINS_ALL_RUNS_API)
+        r.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        logging.error(err)
     # <Project activity="Sleeping" lastBuildStatus="Success" lastBuildLabel="756"
     # webUrl="http://jenkins.mxnet-ci.amazon-ml.com/job/Broken_Link_Checker_Pipeline/"
     # name="Broken_Link_Checker_Pipeline" lastBuildTime="2018-11-30T01:12:59Z"/>
