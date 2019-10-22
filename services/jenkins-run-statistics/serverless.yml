@@ -29,16 +29,18 @@ provider:
   stage: ${opt:stage}
   environment: ${file(environment.yml):${self:provider.stage}}
   iamRoleStatements:
-    # - Effect: Allow
-    #   Action:
-    #     - dynamodb:Query
-    #     - dynamodb:Scan
-    #     - dynamodb:GetItem
-    #     - dynamodb:PutItem
-    #     - dynamodb:UpdateItem
-    #     - dynamodb:DeleteItem
-    #   Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_NAME}"
-
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_NAME}"
+    - Effect: "Allow"
+      Action: "s3:GetObject"
+      Resource: "arn:aws:s3:::${self:provider.environment.UNITTEST_ARTIFACT_REPOSITORY}"
     # Grant CloudWatch metric access
     - Effect: "Allow"
       Action:
@@ -57,16 +59,16 @@ functions:
   - jenkins_unit_tests:
       name: JenkinsUnitTests
       handler: unittests.lambda_handler
-      reservedConcurrency: 1
-      timeout: 290
+      # reservedConcurrency: 1
+      # timeout: 290
       events:
         - s3:
             bucket: ${self:provider.environment.UNITTEST_ARTIFACT_REPOSITORY}
             event: s3:ObjectCreated:put
             existing: true
 
-resources:
-  Resources:
+# resources:
+  # Resources:
     # JenkinsRunsDynamoDbTable:
     #   Type: 'AWS::DynamoDB::Table'
     #   DeletionPolicy: Retain
