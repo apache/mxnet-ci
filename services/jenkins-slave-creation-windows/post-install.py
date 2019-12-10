@@ -204,10 +204,10 @@ def main():
         git_file_path = download_file('https://github.com/git-for-windows/git/releases/download/v2.18.0.windows.1/Git-2.18.0-64-bit.exe', tmpdir)
         run_command("{} /VERYSILENT /NORESTART /NOCANCEL /SP- /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS".format(git_file_path))
 
-    # CMAKE 3.11
-    logging.info("Installing CMAKE 3.11...")
+    # CMAKE 3.15
+    logging.info("Installing CMAKE 3.15...")
     with tempfile.TemporaryDirectory() as tmpdir:
-        cmake_file_path = download_file('https://cmake.org/files/v3.11/cmake-3.11.4-win64-x64.msi', tmpdir)
+        cmake_file_path = download_file('https://cmake.org/files/v3.15/cmake-3.15.5-win64-x64.msi', tmpdir)
         run_command("msiexec /i {} /quiet /norestart ADD_CMAKE_TO_PATH=System".format(cmake_file_path))
 
 
