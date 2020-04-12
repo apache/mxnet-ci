@@ -36,15 +36,8 @@ sudo apt-get -y purge openjdk*
 sudo apt-get -y purge nvidia*
 echo "Purged packages"
 
-#Add third party repositories
-sudo add-apt-repository -y ppa:graphics-drivers/ppa
-sudo curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -
-sudo apt-key fingerprint 58118E89F3A912897C070ADBF76221572C52609D
-sudo add-apt-repository "deb https://apt.dockerproject.org/repo/  ubuntu-xenial main"
-sudo apt-get update
-echo "Added third party repositories"
-
 #Install htop
+sudo apt-get update
 sudo apt-get -y install htop
 
 #Install java
@@ -62,7 +55,7 @@ sudo pip3 install boto3 python-jenkins joblib docker
 echo "Installed htop, java, git and python"
 
 #Install nvidia drivers
-sudo apt-get -y install nvidia-410
+sudo apt-get -y install nvidia-418
 
 # TODO: - Disabled nvidia updates @ /etc/apt/apt.conf.d/50unattended-upgrades
 #Unattended-Upgrade::Package-Blacklist {

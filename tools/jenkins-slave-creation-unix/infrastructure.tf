@@ -27,10 +27,6 @@ variable "instance_type" {
   type = "string"
 }
 
-variable "additional_security_group_ids" {
-  type = "list"
-}
-
 variable "secret_manager_docker_hub_arn" {
   type = "string"
 }
@@ -95,7 +91,7 @@ data "template_cloudinit_config" "user_data" {
         content = "${file("${var.shell_variables_file}")}"
     }
 
-
+	
     part {
         content_type = "text/x-shellscript"
         content = "${file("${var.slave_install_script}")}"
@@ -184,7 +180,7 @@ resource "aws_iam_policy" "jenkins_slave_s3_read_policy" {
             ]
         }
 
-
+        
     ]
 }
 POLICY
@@ -217,7 +213,7 @@ resource "aws_iam_policy" "jenkins_slave_ec2_create_tags" {
             ]
         }
 
-
+        
     ]
 }
 POLICY
@@ -288,19 +284,18 @@ resource "aws_instance" "mxnet-slave" {
   #
   key_name = "${var.key_name}"
 
-  vpc_security_group_ids =  ["${
-    concat(
-      var.additional_security_group_ids
-    )
-  }"]
+  vpc_security_group_ids =  [
+    "REDACTED",
+    "REDACTED"
+  ]
 
   user_data = "${data.template_cloudinit_config.user_data.rendered}"
 
-  tags {
+  tags = {
     "Name" = "${var.instance_name}"
   }
 
-
+  
   root_block_device {
     volume_type = "gp2"
     volume_size = 350
@@ -322,5 +317,5 @@ resource "aws_s3_bucket_object" "slave_config_s3" {
   bucket = "${aws_s3_bucket.slave_config_bucket.id}"
   key    = "${var.s3_config_filename}"
   source = "${var.slave_config_tar_path}"
-  etag   = "${md5(file(var.slave_config_tar_path))}"
+  etag   = "${filemd5(var.slave_config_tar_path)}"
 }

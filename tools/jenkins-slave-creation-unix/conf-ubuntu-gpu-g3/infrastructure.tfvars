@@ -19,11 +19,6 @@ key_name = "REDACTED"
 key_path = "~/.ssh/REDACTED"
 instance_type = "g3.8xlarge"
 
-additional_security_group_ids = [
-  "sg-5d83d421", # VPC default
-  "REDACTED" # REDACTED
-]
-
 s3_config_bucket = "mxnet-ci-slave-dev"
 s3_config_filename = "ubuntu-gpu-g3-config.tar.bz2"
 slave_install_script  = "conf-ubuntu-gpu-g3/install.sh"
