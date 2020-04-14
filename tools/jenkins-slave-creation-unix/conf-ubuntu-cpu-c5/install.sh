@@ -29,7 +29,7 @@ whoami
 sudo useradd jenkins_slave
 
 #Prevent log in
-sudo usermod -L jenkins_slave
+sudo usermod -L jenkins_slave 
 sudo mkdir -p /home/jenkins_slave/remoting
 sudo chown -R jenkins_slave:jenkins_slave /home/jenkins_slave
 
@@ -38,15 +38,8 @@ sudo apt-get -y purge openjdk*
 sudo apt-get -y purge nvidia*
 echo "Purged packages"
 
-#Add third party repositories
-sudo add-apt-repository -y ppa:graphics-drivers/ppa
-sudo curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -
-sudo apt-key fingerprint 58118E89F3A912897C070ADBF76221572C52609D
-sudo add-apt-repository "deb https://apt.dockerproject.org/repo/  ubuntu-xenial main"
-sudo apt-get update
-echo "Added third party repositories"
-
 #Install htop
+sudo apt-get update
 sudo apt-get -y install htop
 
 #Install java
@@ -58,26 +51,29 @@ sudo -H -S -u jenkins_slave git config --global user.email "mxnet-ci"
 sudo -H -S -u jenkins_slave git config --global user.name "mxnet-ci"
 
 #Install python3, pip3 and dependencies for auto-connect.py
-sudo apt-get -y install python3 python3-pip
-sudo pip3 install boto3 python-jenkins joblib docker
-
+sudo apt-get -y install python3 python3-pip python3-boto3 python3-jenkins python3-joblib
+sudo pip3 install "docker<4.0.0"
 echo "Installed htop, java, git and python"
 
 
 #Install docker engine
-sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo apt-key fingerprint 0EBFCD88
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
-sudo apt-get update
-sudo apt-get install -y docker-ce
+sudo apt-get install -y docker.io
 sudo usermod -aG docker jenkins_slave
-sudo systemctl enable docker #Enable docker to start on startup
-sudo service docker restart
+sudo systemctl enable docker  # Enable docker to start on startup
+sudo systemctl restart docker
 echo "Installed docker engine"
+
+#Install and setup QEMU for virtualization
+sudo apt-get install -y qemu qemu-user-static binfmt-support wget
+# Install Qemu 4.2 static qemu-user-static binaries from Ubuntu 20.04
+# Ubuntu 18.04 comes with Qemu 2.11 by default, which is buggy for ARMv8.
+# These are static binaries, so it's fine to install the 20.04 package on 18.04
+wget http://mirrors.kernel.org/ubuntu/pool/universe/q/qemu/qemu-user-static_4.2-3ubuntu4_amd64.deb
+sudo dpkg -i qemu-user-static_4.2-3ubuntu4_amd64.deb
+wget https://raw.githubusercontent.com/qemu/qemu/stable-4.1/scripts/qemu-binfmt-conf.sh
+chmod +x qemu-binfmt-conf.sh
+# Enable qemu binfmt targets: https://www.kernel.org/doc/html/v5.6/admin-guide/binfmt-misc.html
+sudo ./qemu-binfmt-conf.sh --persistent yes --qemu-suffix "-static" --qemu-path "/usr/bin" --systemd ALL
 
 # Download additional scripts
 sudo apt-get -y install awscli

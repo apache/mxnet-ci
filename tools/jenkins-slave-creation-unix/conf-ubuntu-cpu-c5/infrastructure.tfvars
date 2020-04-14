@@ -19,16 +19,11 @@ key_name = "REDACTED"
 key_path = "~/.ssh/REDACTED"
 instance_type = "c5.18xlarge"
 
-additional_security_group_ids = [
-  "sg-5d83d421", # VPC default
-  "sg-REDACTED" # REDACTED
-]
-
 s3_config_bucket = "mxnet-ci-slave-dev"
 s3_config_filename = "ubuntu-cpu-c5-config.tar.bz2"
 slave_install_script  = "conf-ubuntu-cpu-c5/install.sh"
 shell_variables_file = "conf-ubuntu-cpu-c5/shell-variables.sh"
-ami = "ami-bd8f33c5" # ftp://64.50.236.216/pub/ubuntu-cloud-images/query/xenial/server/released.txt
+ami = "ami-0d1cd67c26f5fca19" # Ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20200112
 instance_name = "Slave-base_Ubuntu-CPU-C5"
 aws_region = "us-west-2"
 secret_manager_docker_hub_arn = "arn:aws:secretsmanager:us-west-2:REDACTED:secret:REDACTED"
