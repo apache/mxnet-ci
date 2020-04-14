@@ -1,8 +1,8 @@
 test:
-    JENKINS_URL: "http://jenkins.mxnet-ci.amazon-ml.com/"
+    JENKINS_URL: "http://jenkins.mxnet-ci-dev.amazon-ml.com/"
     REGION: us-west-2
-    CLOUDWATCH_METRIC_NAMESPACE: 'marco-jenkins-run-statistics4'
-    DYNAMODB_TABLE_NAME: 'marco-test-jenkins-run-statistics4'
+    CLOUDWATCH_METRIC_NAMESPACE: 'test-jenkins-run-statistics'
+    DYNAMODB_TABLE_NAME: 'test-jenkins-run-statistics'
 
 prod:
     JENKINS_URL: "http://jenkins.mxnet-ci.amazon-ml.com/"
