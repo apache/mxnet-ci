@@ -59,7 +59,8 @@ echo "Installed htop, java, git and python"
 #Install nvidia drivers
 #Chose the latest nvidia driver supported on Tesla driver for Ubuntu18.04
 #Refer : https://www.nvidia.com/Download/driverResults.aspx/158191/en-us
-sudo apt-get -y install nvidia-440
+sudo apt-get -y install nvidia-driver-435
+sudo apt-get -y install nvidia-utils-435
 
 # TODO: - Disabled nvidia updates @ /etc/apt/apt.conf.d/50unattended-upgrades
 #Unattended-Upgrade::Package-Blacklist {
