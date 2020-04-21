@@ -20,11 +20,11 @@ key_path = "~/.ssh/REDACTED"
 instance_type = "g4dn.4xlarge"
 
 s3_config_bucket = "mxnet-ci-slave-dev"
-s3_config_filename = "ubuntu-gpu-g4-config.tar.bz2"
-slave_install_script  = "conf-ubuntu-gpu-g4/install.sh"
-shell_variables_file = "conf-ubuntu-gpu-g4/shell-variables.sh"
+s3_config_filename = "ubuntu-gpu-config.tar.bz2"
+slave_install_script  = "conf-ubuntu-gpu/install.sh"
+shell_variables_file = "conf-ubuntu-gpu/shell-variables.sh"
 # Base AMI, defines the OS of the slave instance [here: Ubuntu18.04 base image]
 ami = "ami-0d1cd67c26f5fca19" # Ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20200112
-instance_name = "Slave-base_Ubuntu-GPU-G4"
+instance_name = "Slave-base_Ubuntu-GPU"
 aws_region = "us-west-2"
 secret_manager_docker_hub_arn = "arn:aws:secretsmanager:us-west-2:REDACTED:secret:REDACTED"

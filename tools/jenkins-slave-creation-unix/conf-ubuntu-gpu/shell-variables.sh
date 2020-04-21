@@ -19,4 +19,4 @@
 
 
 export S3_CONFIG_BUCKET="mxnet-ci-slave-dev"
-export S3_CONFIG_FILE="ubuntu-gpu-g4-config.tar.bz2"
+export S3_CONFIG_FILE="ubuntu-gpu-config.tar.bz2"

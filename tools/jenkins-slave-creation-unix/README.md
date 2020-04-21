@@ -76,4 +76,5 @@ pip3 install python_terraform
 ## Create an AMI
 - Login to AWS Console
 - Instance would be created with the name used in `infrastructure.tfvars.instance_name`
-- Select Instance -> Actions -> Image -> Create Image
+- Stop the instance & wait till the status changes from Running -> Stopping -> Stopped
+- Once the instance is stopped, Select Instance -> Actions -> Image -> Create Image
