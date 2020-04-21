@@ -82,7 +82,12 @@ sudo apt-get install -y docker-ce
 sudo usermod -aG docker jenkins_slave
 sudo systemctl enable docker #Enable docker to start on startup
 sudo service docker restart
-echo "Installed docker engine"
+# Get latest docker-compose; Ubuntu 18.04 has latest docker in bionic-updates, but not docker-compose and rather ships v1.17 from 2017
+# See https://github.com/docker/compose/releases for latest release
+# /usr/local/bin is not on the PATH in Jenkins, thus place binary in /usr/bin
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
+sudo chmod +x /usr/bin/docker-compose
+echo "Installed docker engine and docker-compose"
 
 # Add nvidia-docker and nvidia-docker-plugin
 curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \
