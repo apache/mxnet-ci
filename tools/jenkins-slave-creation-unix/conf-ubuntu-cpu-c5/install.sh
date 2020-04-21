@@ -38,9 +38,9 @@ sudo apt-get -y purge openjdk*
 sudo apt-get -y purge nvidia*
 echo "Purged packages"
 
-#Install htop
+#Install basic utilities
 sudo apt-get update
-sudo apt-get -y install htop
+sudo apt-get -y install htop wget
 
 #Install java
 sudo apt-get -y install openjdk-8-jre
@@ -51,8 +51,8 @@ sudo -H -S -u jenkins_slave git config --global user.email "mxnet-ci"
 sudo -H -S -u jenkins_slave git config --global user.name "mxnet-ci"
 
 #Install python3, pip3 and dependencies for auto-connect.py
-sudo apt-get -y install python3 python3-pip python3-boto3 python3-jenkins python3-joblib
-sudo pip3 install "docker<4.0.0"
+sudo apt-get -y install python3 python3-pip python3-yaml python3-jenkins python3-joblib
+sudo pip3 install "docker<4.0.0" boto3
 echo "Installed htop, java, git and python"
 
 
@@ -61,15 +61,27 @@ sudo apt-get install -y docker.io
 sudo usermod -aG docker jenkins_slave
 sudo systemctl enable docker  # Enable docker to start on startup
 sudo systemctl restart docker
-echo "Installed docker engine"
+# Get latest docker-compose; Ubuntu 18.04 has latest docker in bionic-updates, but not docker-compose and rather ships v1.17 from 2017
+# See https://github.com/docker/compose/releases for latest release
+# /usr/local/bin is not on the PATH in Jenkins, thus place binary in /usr/bin
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
+sudo chmod +x /usr/bin/docker-compose
+echo "Installed docker engine and docker-compose"
 
 #Install and setup QEMU for virtualization
-sudo apt-get install -y qemu qemu-user-static binfmt-support wget
-# Install Qemu 4.2 static qemu-user-static binaries from Ubuntu 20.04
-# Ubuntu 18.04 comes with Qemu 2.11 by default, which is buggy for ARMv8.
+sudo apt-get install -y qemu binfmt-support
+# Get qemu-user-static from Ubuntu 20.04 (18.04 binaries are buggy)
 # These are static binaries, so it's fine to install the 20.04 package on 18.04
-wget http://mirrors.kernel.org/ubuntu/pool/universe/q/qemu/qemu-user-static_4.2-3ubuntu4_amd64.deb
-sudo dpkg -i qemu-user-static_4.2-3ubuntu4_amd64.deb
+sudo sh -c 'cat << EOF > /etc/apt/sources.list.d/focal.list
+deb [arch=amd64] http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ focal main restricted universe
+EOF'
+sudo sh -c 'cat << EOF > /etc/apt/preferences
+Package: *
+Pin: release a=focal
+Pin-Priority: 100
+EOF'
+sudo apt-get update
+sudo apt-get install -t focal -y qemu-user-static
 wget https://raw.githubusercontent.com/qemu/qemu/stable-4.1/scripts/qemu-binfmt-conf.sh
 chmod +x qemu-binfmt-conf.sh
 # Enable qemu binfmt targets: https://www.kernel.org/doc/html/v5.6/admin-guide/binfmt-misc.html
