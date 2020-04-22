@@ -32,6 +32,28 @@ If this lambda function times out due to too much data, it will automatically re
 ## Set up
 - Install the Serverless framework
 
+Requires : `npm` i.e. **Node Package Manager**
+
+Refer : https://www.npmjs.com/get-npm
+
+Verify : `node -v` and `npm -v`
+
+Once node & npm is installed,
+```
+npm install -g serverless
+npm install serverless-python-requirements
+```
+
+- Create a virtual-env
+```
+virtualenv -p python3 py3_venv
+source py3_venv/bin/activate
+```
+- Install required packages
+```
+pip install -r requirements.txt
+```
+
 ## Execution
 Run deploy_lambda.sh
 
