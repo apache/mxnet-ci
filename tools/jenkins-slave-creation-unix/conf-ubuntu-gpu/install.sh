@@ -97,7 +97,8 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
   sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 sudo apt-get update
 
-# Install nvidia-docker2 and reload the Docker daemon configuration
+# Install nvidia-container toolkit and reload the Docker daemon configuration
+# Refer Nvidia Docker : https://github.com/NVIDIA/nvidia-docker
 sudo apt-get install -y nvidia-container-toolkit
 sudo systemctl restart docker
 
