@@ -57,10 +57,10 @@ sudo pip3 install boto3 python-jenkins joblib docker
 echo "Installed htop, java, git and python"
 
 #Install nvidia drivers
-#Chose the latest nvidia driver supported on Tesla driver for Ubuntu18.04
-#Refer : https://www.nvidia.com/Download/driverResults.aspx/158191/en-us
-sudo apt-get -y install nvidia-driver-435
-sudo apt-get -y install nvidia-utils-435
+sudo apt-add-repository ppa:graphics-drivers/ppa
+sudo apt-get update
+sudo apt-get -y install nvidia-418
+
 
 # TODO: - Disabled nvidia updates @ /etc/apt/apt.conf.d/50unattended-upgrades
 #Unattended-Upgrade::Package-Blacklist {
@@ -98,8 +98,8 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
 sudo apt-get update
 
 # Install nvidia-docker2 and reload the Docker daemon configuration
-sudo apt-get install -y nvidia-docker2
-sudo pkill -SIGHUP dockerd
+sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
 
 # Download additional scripts
 sudo apt-get -y install awscli
