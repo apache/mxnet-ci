@@ -59,8 +59,13 @@ echo "Installed htop, java, git and python"
 #Install nvidia drivers
 #Chose the latest nvidia driver supported on Tesla driver for Ubuntu18.04
 #Refer : https://www.nvidia.com/Download/driverResults.aspx/158191/en-us
-sudo apt-get -y install nvidia-driver-435
-sudo apt-get -y install nvidia-utils-435
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
+sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
+wget http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda-repo-ubuntu1804-10-2-local-10.2.89-440.33.01_1.0-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu1804-10-2-local-10.2.89-440.33.01_1.0-1_amd64.deb
+sudo apt-key add /var/cuda-repo-10-2-local-10.2.89-440.33.01/7fa2af80.pub
+sudo apt-get update
+sudo apt-get -y install cuda-drivers
 
 # TODO: - Disabled nvidia updates @ /etc/apt/apt.conf.d/50unattended-upgrades
 #Unattended-Upgrade::Package-Blacklist {
@@ -97,9 +102,23 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
   sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 sudo apt-get update
 
-# Install nvidia-docker2 and reload the Docker daemon configuration
-sudo apt-get install -y nvidia-docker2
-sudo pkill -SIGHUP dockerd
+# Install nvidia docker related packages and reload the Docker daemon configuration
+# Install nvidia-container toolkit and reload the Docker daemon configuration
+# Refer Nvidia Docker : https://github.com/NVIDIA/nvidia-docker
+sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+
+# Install & add nvidia container runtime to the Docker daemon
+# Refer https://github.com/nvidia/nvidia-container-runtime#docker-engine-setup
+sudo apt-get install nvidia-container-runtime
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo tee /etc/systemd/system/docker.service.d/override.conf <<EOF
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd --host=fd:// --add-runtime=nvidia=/usr/bin/nvidia-container-runtime
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
 
 # Download additional scripts
 sudo apt-get -y install awscli
