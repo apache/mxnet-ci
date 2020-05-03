@@ -417,7 +417,7 @@ def _unconnected_instances(nodes: list, instance_uptime: Dict[str, int], ec2_res
     dict_starting_nodes: Dict[str, List[str]] = defaultdict(list)
     instances_filter = ec2_resource.instances.filter(
         Filters=[
-            {'Name': 'instance-state-name', 'Values': ['pending', 'running']},
+            {'Name': 'instance-state-name', 'Values': ['starting', 'running']},
             {'Name': 'tag:AutoScaledSlave', 'Values': ['True']}  # Ensure only listing instances managed by auto scaling
         ])
     for instance in instances_filter:
@@ -434,7 +434,13 @@ def _unconnected_instances(nodes: list, instance_uptime: Dict[str, int], ec2_res
                 dict_starting_nodes[label].append(tags['Name'])
             else:  # pragma: no cover
                 logging.error("Managed slave instance %s does not have tag label", instance.id)
-
+        elif not target_node:
+            logging.error("Found orphaned / zombie instance: '%s'", instance.id)
+            if 'label' in tags:
+                label = tags['label']
+                dict_starting_nodes[label].append(tags['Name'])
+            else:  # pragma: no cover
+                logging.error("Managed slave instance %s does not have tag label", instance.id)
     return dict_starting_nodes
 
 
@@ -611,7 +617,7 @@ def _instance_uptime(ec2_resource) -> Dict[str, int]:
     instances = list(ec2_resource.instances.filter(
         Filters=[
             {'Name': 'tag:AutoScaledSlave', 'Values': ['True']}  # Ensure only listing instances managed by auto scaling
-            , {'Name': 'instance-state-name', 'Values': ['starting', 'running']}
+            , {'Name': 'instance-state-name', 'Values': ['pending', 'running']}
         ]
     ))
 
@@ -1073,7 +1079,7 @@ def _get_jenkins_handle() -> jenkinsapi.jenkins.Jenkins:  # pragma: no cover
     except HTTPError as e:
         logging.exception('Error initializing Jenkins API.')
         if e.response.status_code == 500:
-            logging.error('Did you properly set up the API token? https://REDACTEDI/MXBLN-376')
+            logging.error('Did you properly set up the API token? https://REDACTED/MXBLN-376')
 
         logging.error('HTML response - use an HTML beautifier to view it properly: %s', e.response.content)
         raise Exception('Error initializing Jenkins API', e)
