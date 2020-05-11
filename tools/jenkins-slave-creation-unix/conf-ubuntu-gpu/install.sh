@@ -156,9 +156,6 @@ echo 'mxnet-linux-cpu10' > /home/jenkins_slave/jenkins_slave_name
 "
 echo "$readme" > /home/ubuntu/readme.txt
 
-# Disable automatic Ubuntu updates
-sudo systemctl disable --now apt-daily{,-upgrade}.{timer,service}
-
 echo "Setup completed"
 
 # For testing use reboot, but lateron just turn off the instance to prepare AMI generation
