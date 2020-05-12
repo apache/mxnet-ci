@@ -417,7 +417,7 @@ def _unconnected_instances(nodes: list, instance_uptime: Dict[str, int], ec2_res
     dict_starting_nodes: Dict[str, List[str]] = defaultdict(list)
     instances_filter = ec2_resource.instances.filter(
         Filters=[
-            {'Name': 'instance-state-name', 'Values': ['starting', 'running']},
+            {'Name': 'instance-state-name', 'Values': ['pending', 'running']},
             {'Name': 'tag:AutoScaledSlave', 'Values': ['True']}  # Ensure only listing instances managed by auto scaling
         ])
     for instance in instances_filter:
