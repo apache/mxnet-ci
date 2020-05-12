@@ -23,11 +23,13 @@ set -x
 # Load variables
 source /var/lib/cloud/instance/scripts/part-001
 
+whoami
+
 #Setup jenkins user
 sudo useradd jenkins_slave
 
 #Prevent log in
-sudo usermod -L jenkins_slave
+sudo usermod -L jenkins_slave 
 sudo mkdir -p /home/jenkins_slave/remoting
 sudo chown -R jenkins_slave:jenkins_slave /home/jenkins_slave
 
@@ -55,7 +57,14 @@ sudo pip3 install boto3 python-jenkins joblib docker
 echo "Installed htop, java, git and python"
 
 #Install nvidia drivers
-sudo apt-get -y install nvidia-418
+#Chose the latest nvidia driver supported on Tesla driver for Ubuntu18.04
+#Refer : https://www.nvidia.com/Download/driverResults.aspx/158191/en-us
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
+sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
+sudo apt-get update
+sudo apt-get -y install cuda-drivers
 
 # TODO: - Disabled nvidia updates @ /etc/apt/apt.conf.d/50unattended-upgrades
 #Unattended-Upgrade::Package-Blacklist {
@@ -77,7 +86,12 @@ sudo apt-get install -y docker-ce
 sudo usermod -aG docker jenkins_slave
 sudo systemctl enable docker #Enable docker to start on startup
 sudo service docker restart
-echo "Installed docker engine"
+# Get latest docker-compose; Ubuntu 18.04 has latest docker in bionic-updates, but not docker-compose and rather ships v1.17 from 2017
+# See https://github.com/docker/compose/releases for latest release
+# /usr/local/bin is not on the PATH in Jenkins, thus place binary in /usr/bin
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
+sudo chmod +x /usr/bin/docker-compose
+echo "Installed docker engine and docker-compose"
 
 # Add nvidia-docker and nvidia-docker-plugin
 curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \
@@ -87,9 +101,22 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
   sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 sudo apt-get update
 
-# Install nvidia-docker2 and reload the Docker daemon configuration
-sudo apt-get install -y nvidia-docker2
-sudo pkill -SIGHUP dockerd
+# Install nvidia docker related packages and reload the Docker daemon configuration
+# Install nvidia-container toolkit and reload the Docker daemon configuration
+# Refer Nvidia Docker : https://github.com/NVIDIA/nvidia-docker
+sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+
+# Install & add nvidia container runtime to the Docker daemon
+# Refer https://github.com/nvidia/nvidia-container-runtime#docker-engine-setup
+sudo apt-get install nvidia-container-runtime
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo tee /etc/systemd/system/docker.service.d/override.conf <<EOF
+[Service]
+ExecStart=/usr/bin/dockerd --host=fd:// --add-runtime=nvidia=/usr/bin/nvidia-container-runtime
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
 
 # Download additional scripts
 sudo apt-get -y install awscli
@@ -119,6 +146,7 @@ readme="Please use the following command in your cloud-init-script to specify th
 address:
 #!/bin/bash
 echo 'http://jenkins.mxnet-ci.amazon-ml.com/' > /home/jenkins_slave/jenkins_master_url
+
 echo 'http://jenkins-priv.mxnet-ci.amazon-ml.com/' > /home/jenkins_slave/jenkins_master_private_url
 
 

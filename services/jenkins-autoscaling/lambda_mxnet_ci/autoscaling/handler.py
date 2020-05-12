@@ -434,7 +434,13 @@ def _unconnected_instances(nodes: list, instance_uptime: Dict[str, int], ec2_res
                 dict_starting_nodes[label].append(tags['Name'])
             else:  # pragma: no cover
                 logging.error("Managed slave instance %s does not have tag label", instance.id)
-
+        elif not target_node:
+            logging.error("Found orphaned / zombie instance: '%s'", instance.id)
+            if 'label' in tags:
+                label = tags['label']
+                dict_starting_nodes[label].append(tags['Name'])
+            else:  # pragma: no cover
+                logging.error("Managed slave instance %s does not have tag label", instance.id)
     return dict_starting_nodes
 
 
@@ -611,7 +617,7 @@ def _instance_uptime(ec2_resource) -> Dict[str, int]:
     instances = list(ec2_resource.instances.filter(
         Filters=[
             {'Name': 'tag:AutoScaledSlave', 'Values': ['True']}  # Ensure only listing instances managed by auto scaling
-            , {'Name': 'instance-state-name', 'Values': ['starting', 'running']}
+            , {'Name': 'instance-state-name', 'Values': ['pending', 'running']}
         ]
     ))
 
@@ -828,6 +834,7 @@ echo '{EFS_DNS_ADDRESS}' > /home/jenkins_slave/ccache_efs_address
     linux_types = ['mxnetlinux-cpu',
                    'restricted-mxnetlinux-cpu',
                    'mxnetlinux-gpu',
+                   'mxnetlinux-gpu-g4',
                    'mxnetlinux-gpu-p3',
                    'restricted-mxnetlinux-gpu-p3',
                    'restricted-mxnetlinux-gpu',
@@ -1072,7 +1079,7 @@ def _get_jenkins_handle() -> jenkinsapi.jenkins.Jenkins:  # pragma: no cover
     except HTTPError as e:
         logging.exception('Error initializing Jenkins API.')
         if e.response.status_code == 500:
-            logging.error('Did you properly set up the API token? https://REDACTEDI/MXBLN-376')
+            logging.error('Did you properly set up the API token? https://REDACTED/MXBLN-376')
 
         logging.error('HTML response - use an HTML beautifier to view it properly: %s', e.response.content)
         raise Exception('Error initializing Jenkins API', e)
@@ -1257,6 +1264,15 @@ def _get_slave_configuration():
             'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 16.04 on a g3.8xlarge',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'mxnetlinux-gpu',  # Space separated labels string
+            'exclusive': True,  # Only run jobs assigned to it
+            'tunnel': _get_jenkins_private_tunnel_address(),
+            'job_name_restriction_regex': '^(?!restricted-).+'  # Run only unrestricted jobs
+        },
+        'mxnetlinux-gpu-g4': {
+            'num_executors': _get_nb_executors_per_label()['mxnetlinux-gpu-g4'],  # Number of executors
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 18.04 on a g4dn.4xlarge',
+            'remote_fs': '/home/jenkins_slave',  # Remote workspace location
+            'labels': 'mxnetlinux-gpu-g4',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
             'tunnel': _get_jenkins_private_tunnel_address(),
             'job_name_restriction_regex': '^(?!restricted-).+'  # Run only unrestricted jobs

@@ -15,8 +15,16 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# Terraform backend configuration. See See https://www.terraform.io/docs/backends/config.html for
-# more details. Reason being that config can not be interpolated during backend init
+key_name = "REDACTED"
+key_path = "~/.ssh/REDACTED"
+instance_type = "g4dn.4xlarge"
 
-bucket = "mxnet-ci-slave-dev-tfstate"
-region = "us-west-2"
+s3_config_bucket = "mxnet-ci-slave-dev"
+s3_config_filename = "ubuntu-gpu-config.tar.bz2"
+slave_install_script  = "conf-ubuntu-gpu/install.sh"
+shell_variables_file = "conf-ubuntu-gpu/shell-variables.sh"
+# Base AMI, defines the OS of the slave instance [here: Ubuntu18.04 base image]
+ami = "ami-0d1cd67c26f5fca19" # Ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20200112
+instance_name = "Slave-base_Ubuntu-GPU"
+aws_region = "us-west-2"
+secret_manager_docker_hub_arn = "arn:aws:secretsmanager:us-west-2:REDACTED:secret:REDACTED"
