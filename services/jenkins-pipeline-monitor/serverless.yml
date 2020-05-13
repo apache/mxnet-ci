@@ -28,7 +28,10 @@ functions:
     reservedConcurrency: 1
     events:
       # Invoke Lambda function on a schedule
-      - schedule: rate(5 minutes)
+      # Since daily trigger triggers builds at 7:41pm UTC
+      # Data collected reveals last build for the day ends by 11:59pm UTC
+      # Hence lambda triggered daily at 11:59pm UTC
+      - schedule: cron(59 23 * * ? *)
     environment:
       region_name: ${self:provider.environment.SECRET_ENDPOINT_REGION}
       secret_name: ${self:provider.environment.SECRET_NAME}    
