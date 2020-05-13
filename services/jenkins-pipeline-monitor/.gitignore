@@ -1,0 +1,16 @@
+# Serverless files
+node_modules
+package-lock.json
+.serverless/
+
+# Virtualenv
+my_env/
+
+#pycache
+__pycache__/
+
+# Visual Studio Code
+.vscode
+
+# Mac OS X
+.DS_Store
