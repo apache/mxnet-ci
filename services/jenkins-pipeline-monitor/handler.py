@@ -89,18 +89,12 @@ def filter_by_desired_release_job_type(latest_day_builds, desired_release_job_ty
     return filtered_builds
 
 
-def raise_alarm():
-    pass
-
-
 def status_check(builds):
     for build in builds:
         if build.get_status() == 'SUCCESS':
-            logging.info(f'Successful build {build.get_number()}')
-            # logging.info('Successful build')
+            logging.info(f'Successful build {get_release_job_type(build)} {build.get_number()}')
         else:
-            logging.info(f'Failure build {build.get_number()}')
-            raise_alarm()
+            logging.info(f'Failure build {get_release_job_type(build)} {build.get_number()}')
 
 
 def jenkins_pipeline_monitor():
