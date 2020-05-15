@@ -126,10 +126,12 @@ def jenkins_pipeline_monitor():
     desired_release_job_type = ['mxnet_lib/static', 'python/pypi']
 
     filtered_builds = filter_by_desired_release_job_type(latest_day_builds, desired_release_job_type)
+    logging.info(f'Builds filtered by desired release job type : {filtered_builds}')
+
     desired_cause = 'hudson.model.Cause$UpstreamCause'
     filtered_builds = filter_by_upstream_cause(filtered_builds, desired_cause)
 
-    logging.info(f'Filtered builds {filtered_builds}')
+    logging.info(f'Filtered builds by {desired_cause} : {filtered_builds}')
     status_check(filtered_builds)
 
 
