@@ -51,16 +51,13 @@ def get_build_date(timestamp):
 def is_latest_day_build(current_build, latest_build):
     current_build_timestamp = get_build_timestamp(current_build)
     latest_build_timestamp = get_build_timestamp(latest_build)
-    # if 2 builds are within 24 hours and on the same day
-    seconds_difference = (latest_build_timestamp-current_build_timestamp).total_seconds()
-    hour_difference = divmod(seconds_difference, 3600)[0]
-
+    # if 2 builds are on the same day
     current_build_date = get_build_date(current_build_timestamp)
     latest_build_date = get_build_date(latest_build_timestamp)
-    same_date_check = True if current_build_date == latest_build_date else False
-    if(hour_difference < 24 and same_date_check):
+    if(current_build_date == latest_build_date):
         return True
-    return False
+    else:
+        return False
 
 
 def get_latest_day_builds(job, latest_build_number):
