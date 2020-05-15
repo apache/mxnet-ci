@@ -97,6 +97,18 @@ def status_check(builds):
             logging.info(f'Failure build {get_release_job_type(build)} {build.get_number()}')
 
 
+def get_cause(build):
+    return build.get_causes()[0]['_class']
+
+
+def filter_by_upstream_cause(builds, desired_cause):
+    filtered_builds = []
+    for build in builds:
+        if get_cause(build) == desired_cause:
+            filtered_builds.append(build)
+    return filtered_builds
+
+
 def jenkins_pipeline_monitor():
     # retrieve secret from secert manager
     secret = get_secret()
@@ -117,6 +129,9 @@ def jenkins_pipeline_monitor():
     desired_release_job_type = ['mxnet_lib/static', 'python/pypi']
 
     filtered_builds = filter_by_desired_release_job_type(latest_day_builds, desired_release_job_type)
+    desired_cause = 'hudson.model.Cause$UpstreamCause'
+    filtered_builds = filter_by_upstream_cause(filtered_builds, desired_cause)
+
     logging.info(f'Filtered builds {filtered_builds}')
     status_check(filtered_builds)
 
