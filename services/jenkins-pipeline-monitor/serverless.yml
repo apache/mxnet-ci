@@ -29,9 +29,9 @@ functions:
     events:
       # Invoke Lambda function on a schedule
       # Since daily trigger triggers builds at 7:41pm UTC
-      # Data collected reveals last build for the day ends by 11:59pm UTC
-      # Hence lambda triggered daily at 11:59pm UTC
-      - schedule: cron(59 23 * * ? *)
+      # Data collected reveals 5 builds in release pipeline take max 4 hours
+      # Hence lambda triggered daily at 2:00am UTC [6 hours after daily trigger is enough buffer]
+      - schedule: cron(00 2 * * ? *)
     environment:
       region_name: ${self:provider.environment.SECRET_ENDPOINT_REGION}
       secret_name: ${self:provider.environment.SECRET_NAME}    
