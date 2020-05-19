@@ -1,0 +1,50 @@
+service: jenkins-pipeline-monitor
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: python3.6
+  region: us-west-2
+  stage: ${opt:stage}
+  environment: ${file(environment.yml):${self:provider.stage}}
+  memorySize: 128
+  timeout: 290
+  iamRoleStatements:
+    -  Effect: "Allow"
+       Action:
+         - "secretsmanager:DescribeSecret"
+         - "secretsmanager:GetSecretValue"
+       Resource:
+         - ${self:provider.environment.SECRET_ARN}
+    -  Effect: "Allow"
+       Action:
+         - "secretsmanager:ListSecrets"
+       Resource: "*"
+
+functions:
+  jenkins-pipeline-monitor:
+    handler: handler.lambda_handler
+    reservedConcurrency: 1
+    events:
+      # Invoke Lambda function on a schedule
+      # Since daily trigger triggers builds at 7:41pm UTC
+      # Data collected reveals 5 builds in release pipeline take max 4 hours
+      # Hence lambda triggered daily at 2:00am UTC [6 hours after daily trigger is enough buffer]
+      - schedule: cron(00 2 * * ? *)
+    environment:
+      region_name: ${self:provider.environment.SECRET_ENDPOINT_REGION}
+      secret_name: ${self:provider.environment.SECRET_NAME}    
+      jenkins_url: ${self:provider.environment.JENKINS_URL}
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+
+plugins:
+  - serverless-python-requirements
+
+package:
+  exclude:
+    - node_modules/**
+    - my_env/**

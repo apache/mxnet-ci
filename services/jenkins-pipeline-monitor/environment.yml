@@ -1,0 +1,12 @@
+test:
+    SECRET_NAME: REDACTED
+    JENKINS_URL: "http://jenkins.mxnet-ci-dev.amazon-ml.com"
+    SECRET_ENDPOINT_REGION: us-west-2
+    SECRET_ARN: REDACTED
+
+
+prod:
+    SECRET_NAME: REDACTED
+    JENKINS_URL: "http://jenkins.mxnet-ci.amazon-ml.com"
+    SECRET_ENDPOINT_REGION: us-west-2
+    SECRET_ARN: REDACTED
