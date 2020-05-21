@@ -4,6 +4,7 @@ import json
 import logging
 import secret_manager
 
+from datetime import datetime, timezone
 from jenkinsapi.jenkins import Jenkins
 
 logging.getLogger().setLevel(logging.INFO)
@@ -48,25 +49,31 @@ def get_build_date(timestamp):
     return timestamp.date()
 
 
-def is_latest_day_build(current_build, latest_build):
+def is_latest_day_build(current_build):
     current_build_timestamp = get_build_timestamp(current_build)
-    latest_build_timestamp = get_build_timestamp(latest_build)
-    # if current build is within 8 hours of the latest build
-    seconds_difference = (latest_build_timestamp-current_build_timestamp).total_seconds()
+    current_time_stamp = datetime.now().replace(tzinfo=timezone.utc)
+    # if current build is within 24 hours of the current time
+    seconds_difference = (current_time_stamp-current_build_timestamp).total_seconds()
     hour_difference = divmod(seconds_difference, 3600)[0]
-    if(hour_difference < 8):
+    if(hour_difference < 24):
         return True
     else:
         return False
 
 
 def get_latest_day_builds(job, latest_build_number):
-    latest_build = get_build_from_build_number(job, latest_build_number)
-    builds = [latest_build]
-    current_build_number = latest_build_number-1
+    """
+    Get all the builds that were triggered in the past 24 hours from the current time
+    i.e. the time when the Lambda function is triggered
+    :param job: Jenkins Job object
+    :param latest_build_number: latest build number from which to start checking
+    :result: List[builds]
+    """
+    builds = []
+    current_build_number = latest_build_number
     while True:
         current_build = get_build_from_build_number(job, current_build_number)
-        if is_latest_day_build(current_build, latest_build):
+        if is_latest_day_build(current_build):
             builds.append(current_build)
             current_build_number -= 1
         else:
