@@ -11,6 +11,7 @@ logging.getLogger().setLevel(logging.INFO)
 logging.getLogger('boto3').setLevel(logging.CRITICAL)
 logging.getLogger('botocore').setLevel(logging.CRITICAL)
 
+desired_release_job_type = ['mxnet_lib/static', 'python/pypi']
 
 def get_jenkins_obj(secret):
     """
@@ -94,11 +95,21 @@ def filter_by_desired_release_job_type(latest_day_builds, desired_release_job_ty
 
 
 def status_check(builds):
-    for build in builds:
-        if build.get_status() == 'SUCCESS':
-            logging.info(f'Successful build {get_release_job_type(build)} {build.get_number()}')
-        else:
-            logging.info(f'Failure build {get_release_job_type(build)} {build.get_number()}')
+    """
+    Check the status of the filtered builds
+    If there is not a single build belong to desired release job type, log the failures
+    else check the status via Jenkins API and report accordingly
+    :param builds
+    """
+    if not builds:
+        for job_type in desired_release_job_type:
+            logging.info(f'Failure build {job_type}')
+    else:
+        for build in builds:
+            if build.get_status() == 'SUCCESS':
+                logging.info(f'Successful build {get_release_job_type(build)} {build.get_number()}')
+            else:
+                logging.info(f'Failure build {get_release_job_type(build)} {build.get_number()}')
 
 
 def get_cause(build):
@@ -130,8 +141,6 @@ def jenkins_pipeline_monitor():
     latest_day_builds = get_latest_day_builds(job, latest_build_number)
     logging.info(f'latest builds {latest_day_builds}')
     # filter latest day builds by desired build type a.k.a release job type
-    desired_release_job_type = ['mxnet_lib/static', 'python/pypi']
-
     filtered_builds = filter_by_desired_release_job_type(latest_day_builds, desired_release_job_type)
     logging.info(f'Builds filtered by desired release job type : {filtered_builds}')
 
