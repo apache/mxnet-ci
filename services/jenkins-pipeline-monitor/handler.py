@@ -11,7 +11,7 @@ logging.getLogger().setLevel(logging.INFO)
 logging.getLogger('boto3').setLevel(logging.CRITICAL)
 logging.getLogger('botocore').setLevel(logging.CRITICAL)
 
-desired_release_job_type = ['mxnet_lib/static', 'python/pypi']
+release_job_type = ['mxnet_lib/static', 'python/pypi']
 
 def get_jenkins_obj(secret):
     """
@@ -86,10 +86,10 @@ def get_release_job_type(build):
     return build.get_params()['RELEASE_JOB_TYPE']
 
 
-def filter_by_desired_release_job_type(latest_day_builds, desired_release_job_type):
+def filter_by_release_job_type(latest_day_builds):
     filtered_builds = []
     for build in latest_day_builds:
-        if get_release_job_type(build) in desired_release_job_type:
+        if get_release_job_type(build) in release_job_type:
             filtered_builds.append(build)
     return filtered_builds
 
@@ -102,7 +102,7 @@ def status_check(builds):
     :param builds
     """
     if not builds:
-        for job_type in desired_release_job_type:
+        for job_type in release_job_type:
             logging.info(f'Failure build {job_type}')
     else:
         for build in builds:
@@ -141,7 +141,7 @@ def jenkins_pipeline_monitor():
     latest_day_builds = get_latest_day_builds(job, latest_build_number)
     logging.info(f'latest builds {latest_day_builds}')
     # filter latest day builds by desired build type a.k.a release job type
-    filtered_builds = filter_by_desired_release_job_type(latest_day_builds, desired_release_job_type)
+    filtered_builds = filter_by_release_job_type(latest_day_builds)
     logging.info(f'Builds filtered by desired release job type : {filtered_builds}')
 
     desired_cause = 'hudson.model.Cause$UpstreamCause'
