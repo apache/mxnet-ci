@@ -104,6 +104,8 @@ def status_check(builds):
     """
     # dictionary of the type release_job_type: count
     # e.g. {'mxnet_lib/static':0, 'python/pypi':0}
+    global release_job_type
+    success_count = 0
     release_job_type_dict = {el : 0 for el in release_job_type}
 
     # iterate over the builds to count number of the desirect release job types
@@ -119,9 +121,9 @@ def status_check(builds):
     # iterate over the map of release_job_type: count
     # if 'mxnet_lib/static':1 indicates static jobtype job ran in the pipeline
     # else 'mxnet_lib/static':0 indicates static jobtype never ran -> log as failed
-    for release_job_type, release_job_type_count in release_job_type_dict.items():
+    for release_job_type_name, release_job_type_count in release_job_type_dict.items():
         if release_job_type_count == 0:
-            logging.info(f'Failure build {release_job_type}')
+            logging.info(f'Failure build {release_job_type_name}')
         elif release_job_type_count == 1:
             success_count += 1
         else:
