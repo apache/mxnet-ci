@@ -97,19 +97,40 @@ def filter_by_release_job_type(latest_day_builds):
 def status_check(builds):
     """
     Check the status of the filtered builds
-    If there is not a single build belong to desired release job type, log the failures
+    i.e. Check if all the required release job types are present in the pipeline
+    If there is not a single build from the list of desired release job types, log the failures
     else check the status via Jenkins API and report accordingly
     :param builds
     """
-    if not builds:
-        for job_type in release_job_type:
-            logging.info(f'Failure build {job_type}')
-    else:
-        for build in builds:
+    # dictionary of the type release_job_type: count
+    # e.g. {'mxnet_lib/static':0, 'python/pypi':0}
+    release_job_type_dict = {el : 0 for el in release_job_type}
+
+    # iterate over the builds to count number of the desirect release job types
+    for build in builds:
+        build_release_job_type = get_release_job_type(build)
+        if build_release_job_type in release_job_type_dict:
             if build.get_status() == 'SUCCESS':
-                logging.info(f'Successful build {get_release_job_type(build)} {build.get_number()}')
+                logging.info(f'Successful build {build_release_job_type} {build.get_number()}')
             else:
-                logging.info(f'Failure build {get_release_job_type(build)} {build.get_number()}')
+                logging.info(f'Failure build {build_release_job_type} {build.get_number()}')
+            release_job_type_dict[build_release_job_type] += 1
+
+    # iterate over the map of release_job_type: count
+    # if 'mxnet_lib/static':1 indicates static jobtype job ran in the pipeline
+    # else 'mxnet_lib/static':0 indicates static jobtype never ran -> log as failed
+    for release_job_type, release_job_type_count in release_job_type_dict.items():
+        if release_job_type_count == 0:
+            logging.info(f'Failure build {release_job_type}')
+        elif release_job_type_count == 1:
+            success_count += 1
+        else:
+            logging.info(f'{release_job_type} ran {release_job_type_count} times')
+    # if success_count = 2 [i.e. len of release_job_type], it means both static & pypi jobs have run
+    if success_count == len(release_job_type):
+        logging.info(f'All the required jobs ran')
+    else:
+        logging.info(f'1/more of the required jobs did not run')
 
 
 def get_cause(build):
