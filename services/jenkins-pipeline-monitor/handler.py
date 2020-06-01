@@ -98,7 +98,7 @@ def status_check(builds):
     """
     Check the status of the filtered builds
     i.e. Check if all the required release job types are present in the pipeline
-    If there is not a single build from the list of desired release job types, log the failures
+    If a build from the list of desired release job types doesn't exist, log the failure
     else check the status via Jenkins API and report accordingly
     :param builds
     """
@@ -106,17 +106,16 @@ def status_check(builds):
     # e.g. {'mxnet_lib/static':0, 'python/pypi':0}
     global release_job_type
     success_count = 0
-    release_job_type_dict = {el : 0 for el in release_job_type}
+    release_job_type_dict = {el: 0 for el in release_job_type}
 
-    # iterate over the builds to count number of the desirect release job types
+    # iterate over the builds to count number of the desired release job types
     for build in builds:
         build_release_job_type = get_release_job_type(build)
-        if build_release_job_type in release_job_type_dict:
-            if build.get_status() == 'SUCCESS':
-                logging.info(f'Successful build {build_release_job_type} {build.get_number()}')
-            else:
-                logging.info(f'Failure build {build_release_job_type} {build.get_number()}')
-            release_job_type_dict[build_release_job_type] += 1
+        if build.get_status() == 'SUCCESS':
+            logging.info(f'Successful build {build_release_job_type} {build.get_number()}')
+        else:
+            logging.info(f'Failure build {build_release_job_type} {build.get_number()}')
+        release_job_type_dict[build_release_job_type] += 1
 
     # iterate over the map of release_job_type: count
     # if 'mxnet_lib/static':1 indicates static jobtype job ran in the pipeline
