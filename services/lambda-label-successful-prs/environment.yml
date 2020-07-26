@@ -1,0 +1,25 @@
+test:
+    SECRET_NAME: REDACTED 
+    JENKINS_URL: http://jenkins.mxnet-ci-dev.amazon-ml.com/
+    SECRET_ENDPOINT_URL: https://secretsmanager.us-west-2.amazonaws.com
+    SECRET_ENDPOINT_REGION: us-west-2
+    SECRET_ARN: REDACTED
+    LOGGING_LEVEL: DEBUG
+    LOGGING_LEVEL_BOTOCORE: INFO
+    LOGGING_LEVEL_BOTO3: INFO
+    LOGGING_LEVEL_URLLIB3: INFO
+    LOGGING_LEVEL_REQUESTS: ERROR
+    REPO_NAME: ChaiBapchya/incubator-mxnet
+
+prod:
+    SECRET_NAME: REDACTED
+    JENKINS_URL: https://jenkins.mxnet-ci.amazon-ml.com/
+    SECRET_ENDPOINT_URL: https://secretsmanager.us-west-2.amazonaws.com
+    SECRET_ARN: REDACTED
+    SECRET_ENDPOINT_REGION: us-west-2
+    LOGGING_LEVEL: DEBUG
+    LOGGING_LEVEL_BOTOCORE: INFO
+    LOGGING_LEVEL_BOTO3: INFO
+    LOGGING_LEVEL_URLLIB3: INFO
+    LOGGING_LEVEL_REQUESTS: ERROR
+    REPO_NAME: apache/incubator-mxnet

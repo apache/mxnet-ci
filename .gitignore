@@ -1,2 +1,15 @@
 *.DS_STORE
 *~
+
+# Terraform scripts
+.terraform/
+terraform/
+terraform
+
+# Serverless scripts
+node_modules
+package-lock.json
+.serverless/
+
+# Python
+__pycache__/
