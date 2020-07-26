@@ -62,7 +62,7 @@ class CIBot:
         self.bot_auth = (self.bot_user, self.bot_personal_access_token)
         self.all_jobs = None
         self.jenkins_url = jenkins_url
-        self.translation = {39:None}
+        self.translation = {39: None}
         self.auto_trigger = auto_trigger
         if not self.auto_trigger:
             # Automatic Triggering of Jenkins is disabled
@@ -93,7 +93,7 @@ class CIBot:
         """
 
         # Validating github event is signed
-        try:            
+        try:
             git_signed = ast.literal_eval(event["Records"][0]['body'])['headers']["X-Hub-Signature"]
         except KeyError:
             raise Exception("WebHook from GitHub is not signed")
@@ -118,7 +118,7 @@ class CIBot:
 
     def _get_job_trigger_token(self, name):
         secret = json.loads(secret_manager.get_secret())
-        return secret[name.replace('-', '_')+'_token']
+        return secret[name.replace('-', '_') + '_token']
 
     def _pending_build_cleanup(self, job_instance, name):
         running = job_instance.is_queued_or_running()
@@ -141,11 +141,11 @@ class CIBot:
         :param branch e.g. master/PR
         """
         try:
-            name = "mxnet-validation/"+job+"/"+branch
+            name = "mxnet-validation/" + job + "/" + branch
             job = jenkins_obj[name]
             # check if the job is already in queue or running and kill that pending job first in that case
             self._pending_build_cleanup(job, name)
-            logging.info(f'invoking {name}')            
+            logging.info(f'invoking {name}')
             response = job.invoke(block=False)
             logging.info(response)
             return True
@@ -154,7 +154,7 @@ class CIBot:
                 # Jenkins Automatic Trigger is disabled
                 # branch isn't discovered yet
                 # trigger a scan of multi-branch pipeline
-                url = self.jenkins_url+"multibranch-webhook-trigger/invoke"
+                url = self.jenkins_url + "multibranch-webhook-trigger/invoke"
                 job_trigger_token = self._get_job_trigger_token(job)
                 headers = {"token": job_trigger_token}
                 r = requests.post(url, headers=headers)
@@ -211,7 +211,7 @@ class CIBot:
         Retrieved the Team ID of the Apache MXNet Committer team on Github using a Committer's credentials
         """
         github_obj = self._get_github_object()
-        return github_obj.get_organization('apache').get_team(2413476).has_in_members(github_obj.get_user(comment_author))        
+        return github_obj.get_organization('apache').get_team(2413476).has_in_members(github_obj.get_user(comment_author))
 
     def _is_authorized(self, comment_author, pr_author):
         """
@@ -268,36 +268,36 @@ class CIBot:
 
         if(github_event == "pull_request"):
             pr_num = payload['number']
-            if(payload['action']=='opened'):
-                logging.info('New PR create event detected. Send help guide.')                
+            if(payload['action'] == 'opened'):
+                logging.info('New PR create event detected. Send help guide.')
                 pr_author = payload['pull_request']['user']['login']
                 if(self.auto_trigger):
                     intro_mesg = "All tests are already queued to run once. If tests fail, you can trigger one or more tests again with the following commands:"
                 else:
                     intro_mesg = "Once your PR is ready for CI checks, invoke the following commands:"
-                message = "Hey @"+pr_author+" , Thanks for submitting the PR \n" \
-                        + intro_mesg + " \n" \
-                        "- To trigger all jobs: @" + self.bot_user + " run ci [all] \n" \
-                        "- To trigger specific jobs: @" + self.bot_user + " run ci [job1, job2] \n" \
-                        "*** \n" \
-                        "**CI supported jobs**: "+str(list(self.all_jobs)).translate(self.translation)+"\n" \
-                        "*** \n" \
-                        "_Note_: \n Only following 3 categories can trigger CI :" \
-                        "PR Author, MXNet Committer, Jenkins Admin. \n" \
-                        "All CI tests must pass before the PR can be merged. \n"
+                message = "Hey @" + pr_author + " , Thanks for submitting the PR \n" \
+                    + intro_mesg + " \n" \
+                    "- To trigger all jobs: @" + self.bot_user + " run ci [all] \n" \
+                    "- To trigger specific jobs: @" + self.bot_user + " run ci [job1, job2] \n" \
+                    "*** \n" \
+                    "**CI supported jobs**: " + str(list(self.all_jobs)).translate(self.translation) + "\n" \
+                    "*** \n" \
+                    "_Note_: \n Only following 3 categories can trigger CI :" \
+                    "PR Author, MXNet Committer, Jenkins Admin. \n" \
+                    "All CI tests must pass before the PR can be merged. \n"
                 self.create_comment(pr_num, message)
-            elif(payload['action']=='closed' and payload['pull_request']['merged'] is True and self.run_after_merge):
-                if(payload['pull_request']['base']['ref']!='master'):
+            elif(payload['action'] == 'closed' and payload['pull_request']['merged'] is True and self.run_after_merge):
+                if(payload['pull_request']['base']['ref'] != 'master'):
                     # PR not merged into master
                     # no need to run CI
-                    logging.info('PR merged into'+payload['pull_request']['base']['ref']+'.Hence ignore.')
+                    logging.info('PR merged into' + payload['pull_request']['base']['ref'] + '.Hence ignore.')
                     return
                 # PR has been merged into master
                 # trigger a final CI run on master
                 successful_jobs = self._trigger_ci(self.all_jobs, "master")
-                message = "PR #"+str(pr_num)+" merged. Congrats! \n"
+                message = "PR #" + str(pr_num) + " merged. Congrats! \n"
                 if successful_jobs:
-                    message += "Jenkins CI successfully triggered : "+str(successful_jobs).translate(self.translation)
+                    message += "Jenkins CI successfully triggered : " + str(successful_jobs).translate(self.translation)
                 else:
                     message += "However, the bot is unable to trigger CI."
                 self.create_comment(pr_num, message)
@@ -333,15 +333,15 @@ class CIBot:
             #     logging.error("Bot invoked on an Issue instead of PR")
             #     return
             # Look for phrase referencing @<bot_user>
-            if "@"+str(self.bot_user) in payload["comment"]["body"].lower():
+            if "@" + str(self.bot_user) in payload["comment"]["body"].lower():
                 # if(payload["comment"]["body"].find("]")==-1):
                 #     # ] not found in the phrase; capture everything bot's name onwards
                 #     phrase = payload["comment"]["body"][payload["comment"]["body"].find("@"+str(self.bot_user)):]
                 # else:
                 #     # ] found in the phrase; capture everything between bot's name and end of list token ]
-                phrase = payload["comment"]["body"][payload["comment"]["body"].find("@"+str(self.bot_user)):payload["comment"]["body"].find("]")+1]
+                phrase = payload["comment"]["body"][payload["comment"]["body"].find("@" + str(self.bot_user)):payload["comment"]["body"].find("]") + 1]
                 # remove @<bot_user from the phrase
-                phrase = phrase.replace('@'+self.bot_user,'')
+                phrase = phrase.replace('@' + self.bot_user, '')
                 logging.info(phrase)
                 # remove whitespace characters
                 phrase = ' '.join(phrase.split())
@@ -378,11 +378,10 @@ class CIBot:
                     logging.error(f'Jobs entered by user: {set(user_jobs)}')
                     logging.error(f'CI supported Jobs: {set(self.all_jobs)}')
                     message = "None of the jobs entered are supported. \n" \
-                              "Jobs entered by user: "+str(user_jobs).translate(self.translation)+"\n" \
-                              "CI supported Jobs: "+str(list(self.all_jobs)).translate(self.translation)+"\n"
+                              "Jobs entered by user: " + str(user_jobs).translate(self.translation) + "\n" \
+                              "CI supported Jobs: " + str(list(self.all_jobs)).translate(self.translation) + "\n"
                     self.create_comment(issue_num, message)
                     raise Exception("Provided jobs don't match the ones supported by CI")
-
 
                 # check if the comment author is authorized
                 pr_author = payload["issue"]["user"]["login"]
@@ -391,9 +390,9 @@ class CIBot:
                     logging.info(f'Authorized user: {comment_author}')
                     # since authorized user commented, go ahead trigger CI
                     # branch to be triggered is PR-N where N is the PR number
-                    successful_jobs = self._trigger_ci(valid_jobs, "PR-"+str(issue_num))
+                    successful_jobs = self._trigger_ci(valid_jobs, "PR-" + str(issue_num))
                     if successful_jobs:
-                        message = "Jenkins CI successfully triggered : "+str(successful_jobs).translate(self.translation)
+                        message = "Jenkins CI successfully triggered : " + str(successful_jobs).translate(self.translation)
                     else:
                         message = "Authorized user recognized. However, the bot is unable to trigger CI."
                     self.create_comment(issue_num, message)
@@ -408,7 +407,7 @@ class CIBot:
                 logging.error("CI Bot is not called")
                 return
         else:
-            logging.info(f'GitHub Event unsupported by CI Bot: {github_event}')#{payload["action"]}
+            logging.info(f'GitHub Event unsupported by CI Bot: {github_event}')  # {payload["action"]}
 
     def create_comment(self, issue_num, message):
         """

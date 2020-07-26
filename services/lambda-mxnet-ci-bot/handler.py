@@ -27,12 +27,13 @@ logging.getLogger('botocore').setLevel(logging.CRITICAL)
 
 SQS_CLIENT = boto3.client('sqs')
 
+
 def send_to_sqs(event, context):
 
     response = (SQS_CLIENT.send_message(
         QueueUrl=os.getenv('SQS_URL'),
         MessageBody=str(event)
-        ))
+    ))
 
     logging.info('Response: {}'.format(response))
     status = response['ResponseMetadata']['HTTPStatusCode']
@@ -47,7 +48,7 @@ def send_to_sqs(event, context):
     }
 
 
-def run_jenkins_lambda(event, context):    
+def run_jenkins_lambda(event, context):
     logging.info(f'event {event}')
 
     cibot = CIBot(apply_secret=True, auto_trigger=True)
