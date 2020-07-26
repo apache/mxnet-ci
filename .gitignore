@@ -1,2 +1,19 @@
 *.DS_STORE
 *~
+.vscode/
+.idea
+
+# Terraform scripts
+.terraform/
+terraform
+
+# Serverless scripts
+node_modules
+package-lock.json
+.serverless/
+
+# Python
+__pycache__/
+
+# Non Redacted / Actual environment.yml
+non_redacted_environment.yml

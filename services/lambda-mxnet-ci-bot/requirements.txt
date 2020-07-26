@@ -1,0 +1,4 @@
+PyGithub==1.46
+deprecated==1.2.7
+pyjwt==1.7.1
+jenkinsapi==0.3.11
