@@ -327,11 +327,13 @@ class CIBot:
         # Grab actual payload data of the appropriate GitHub event needed for
         # triggering CI
         if github_event == "issue_comment":
-            # if "pull_request" not in payload:
-            #     message = "Hey @"+comment_author+" \n @"+self.bot_user+" can only be invoked on a PR."
-            #     self.create_comment(issue_num, message)
-            #     logging.error("Bot invoked on an Issue instead of PR")
-            #     return
+            # Check if the bot is invoked from a PR or an issue
+            if "@" + str(self.bot_user) in payload["comment"]["body"].lower() and "pull_request" not in payload["issue"]:
+                # This means the bot didn't get invoked from a PR
+                message = "Hey @" + comment_author + " \n @" + self.bot_user + " can only be invoked on a PR."
+                self.create_comment(issue_num, message)
+                logging.error("Bot invoked on an Issue instead of PR")
+                return
             # Look for phrase referencing @<bot_user>
             if "@" + str(self.bot_user) in payload["comment"]["body"].lower():
                 # if(payload["comment"]["body"].find("]")==-1):

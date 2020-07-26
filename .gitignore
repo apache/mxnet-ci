@@ -15,5 +15,5 @@ package-lock.json
 # Python
 __pycache__/
 
-# Non Redacted / Actual environment.yml
-non_redacted_environment.yml
+# As environment.yml contains secret credentials, don't commit
+environment.yml
