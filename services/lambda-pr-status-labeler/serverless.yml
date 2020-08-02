@@ -1,0 +1,80 @@
+service: pr-status-labeler-bot
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: python3.7
+  region: us-west-2
+  stage: ${opt:stage}
+  environment: ${file(environment.yml):${self:provider.stage}}
+  iamRoleStatements:
+    -  Effect: "Allow"
+       Action:
+         - "secretsmanager:GetSecretValue"
+         - "secretsmanager:DescribeSecret"
+       Resource: ${self:provider.environment.SECRET_ARN}
+    -  Effect: "Allow"
+       Action:
+         - "secretsmanager:ListSecrets"
+       Resource: "*"
+    -  Effect: "Allow"
+       Action:
+         - "sqs:SendMessage"
+         - "sqs:ReceiveMessage"
+         - "sqs:DeleteMessage"
+         - "sqs:GetQueueAttributes"
+       Resource:
+         Fn::GetAtt: [ SQSQueue, Arn ]
+
+functions:
+  pr_status_sqs_function:
+    handler: handler.send_to_sqs
+    environment:
+      SQS_URL:
+        Ref: SQSQueue
+    timeout: 30
+    events:
+      - http: POST send_to_sqs
+
+  pr_status_label_function:
+    handler: handler.run_lambda
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt: [ SQSQueue, Arn ]
+    environment:
+      region_name: ${self:provider.environment.SECRET_ENDPOINT_REGION}
+      secret_name: ${self:provider.environment.SECRET_NAME}
+      repo: ${self:provider.environment.REPO_NAME}
+    timeout: 900
+
+resources:
+  Resources:
+    SQSQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:custom.queueName}
+        VisibilityTimeout: 900
+
+plugins:
+  - serverless-python-requirements
+  - serverless-domain-manager
+
+custom:
+  queueName: pr_status_sqs
+  customDomain:
+    domainName: ${self:provider.environment.DOMAIN_NAME}
+    basePath: ${opt:stage}
+    stage: ${opt:stage} 
+    createRoute53Record: true
+  pythonRequirements:
+    dockerizePip: true
+
+package:
+  exclude:
+    - ./**
+  include:
+    - handler.py
+    - secret_manager.py
+    - PRStatusBot.py
