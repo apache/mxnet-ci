@@ -1,0 +1,16 @@
+notifications:
+    commits:      commits@mxnet.apache.org
+    issues:       commits@mxnet.apache.org
+    pullrequests: commits@mxnet.apache.org
+    jira_options: link label worklog
+
+github:
+  features:
+    wiki: true
+    issues: true
+    projects: true
+
+  enabled_merge_buttons:
+    squash:  true
+    merge:   false
+    rebase:  true
