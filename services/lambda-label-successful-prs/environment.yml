@@ -1,6 +1,5 @@
 test:
     SECRET_NAME: REDACTED 
-    JENKINS_URL: http://jenkins.mxnet-ci-dev.amazon-ml.com/
     SECRET_ENDPOINT_URL: https://secretsmanager.us-west-2.amazonaws.com
     SECRET_ENDPOINT_REGION: us-west-2
     SECRET_ARN: REDACTED
@@ -13,7 +12,6 @@ test:
 
 prod:
     SECRET_NAME: REDACTED
-    JENKINS_URL: https://jenkins.mxnet-ci.amazon-ml.com/
     SECRET_ENDPOINT_URL: https://secretsmanager.us-west-2.amazonaws.com
     SECRET_ARN: REDACTED
     SECRET_ENDPOINT_REGION: us-west-2

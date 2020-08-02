@@ -5,7 +5,6 @@ chardet==3.0.4
 Deprecated==1.2.10
 docutils==0.15.2
 idna==2.10
-jenkinsapi==0.3.11
 jmespath==0.10.0
 PyGithub==1.51
 PyJWT==1.7.1
