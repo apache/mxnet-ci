@@ -156,8 +156,11 @@ class PRStatusBot:
             payload = json.loads(ast.literal_eval(event["Records"][0]['body'])['body'])
         except ValueError:
             raise Exception("Decoding JSON for payload failed")
-
-        pr_number = payload['number']
-        github_obj = self._get_github_object()
-        pr_obj = self._get_pull_request_object(github_obj, pr_number)
-        self._label_pr_based_on_status(pr_obj)
+        context = payload['context']
+        state = payload['state']
+        logging.info(f'PR Context {context}')
+        logging.info(f'PR State {state}')
+        # pr_number = payload['number']
+        # github_obj = self._get_github_object()
+        # pr_obj = self._get_pull_request_object(github_obj, pr_number)
+        # self._label_pr_based_on_status(pr_obj)
