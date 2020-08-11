@@ -102,10 +102,13 @@ class PRStatusBot:
 
     def _drop_other_pr_labels(self, pr, desired_label):
         labels = pr.get_labels()
+
         for label in labels:
+            logging.info(f'Label:{label}')
             if label.name.startswith('pr-') and label.name != desired_label:
                 try:
-                    pr.remove_from_labels(label)
+                    logging.info(f'Removing {label}')
+                    # pr.remove_from_labels(label)
                 except Exception:
                     logging.error(f'Error while removing the label {label}')
 
@@ -118,14 +121,16 @@ class PRStatusBot:
             logging.info(f'PR {pr.number} already contains the label {label}')
             return
 
-        try:
-            pr.add_to_labels(label)
-        except Exception:
-            logging.error(f'Unable to add label {label}')
+        # try:
+        #     pr.add_to_labels(label)
+        # except Exception:
+        #     logging.error(f'Unable to add label {label}')
 
         # verify that label has been correctly added
         if(self._has_desired_label(pr, label)):
             logging.info(f'Successfully labeled {label} for PR-{pr.number}')
+        else:
+            logging.info(f'Not labeled {label}')
         return
 
     def _has_desired_label(self, pr, desired_label):
