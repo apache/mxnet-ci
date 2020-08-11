@@ -20,6 +20,7 @@ import hmac
 import hashlib
 import os
 import logging
+import re
 import secret_manager
 
 from github import Github
@@ -89,31 +90,81 @@ class PRStatusBot:
         pr_obj = repo.get_pull(pr_number)
         return pr_obj
 
-    def _add_label(self, pr):
+    def _get_commit_object(self, github_obj, commit_sha):
+        """
+        This method returns a Commit object based on the SHA of the commit
+        :param github_obj
+        :param commit_sha
+        """
+        repo = github_obj.get_repo(self.repo)
+        commit_obj = repo.get_commit(commit_sha)
+        return commit_obj
+
+    def _drop_other_pr_labels(self, pr, desired_label):
+        labels = pr.get_labels()
+        for label in labels:
+            if label.name.startswith('pr-') and label.name != desired_label:
+                try:
+                    pr.remove_from_labels(label)
+                except Exception:
+                    logging.error(f'Error while removing the label {label}')
+
+    def _add_label(self, pr, label):
+        # drop other PR labels
+        self._drop_other_pr_labels(pr, label)
+
+        # check if the PR already has the desired label
+        if(self._has_desired_label(pr, label)):
+            logging.info(f'PR {pr.number} already contains the label {label}')
+            return
+
         try:
-            pr.add_to_labels('pr-awaiting-review')
+            pr.add_to_labels(label)
         except Exception:
-            logging.error('Unable to add label')
+            logging.error(f'Unable to add label {label}')
 
         # verify that label has been correctly added
-        if(self._check_awaiting_review_label(pr)):
-            logging.info(f'Successfully labeled {pr.number}')
+        if(self._has_desired_label(pr, label)):
+            logging.info(f'Successfully labeled {label} for PR-{pr.number}')
         return
 
-    def _check_awaiting_review_label(self, pr):
+    def _has_desired_label(self, pr, desired_label):
         """
-        This method returns True if pr-awaiting-review label found in PR labels
+        This method returns True if desired label found in PR labels
         """
         labels = pr.get_labels()
         for label in labels:
-            if 'pr-awaiting-review' == label.name:
+            if desired_label == label.name:
                 return True
         return False
 
-    def _label_pr_based_on_status(self, pr):
+    def _parse_reviews(self, pr):
         """
-        This method checks the CI status of each PR
+        This method parses through the reviews of the PR and returns count of
+        4 states: Approved reviews, Comment reviews, Requested Changes reviews
+        and Dismissed reviews
+        :param pr
+        """
+        approved_count, requested_changes_count, comment_count = 0, 0, 0
+        for review in pr.get_reviews():
+            if review.state == 'APPROVED':
+                approved_count += 1
+            elif review.state == 'CHANGES_REQUESTED':
+                requested_changes_count += 1
+            elif review.state == 'COMMENTED':
+                comment_count += 1
+            elif review.state == 'DISMISSED':
+                dismissed_count += 1
+            else:
+                logging.error(f'Unknown review state {review.state}')
+        return approved_count, requested_changes_count, comment_count, dismissed_count
+
+    def _label_pr_based_on_status(self, combined_status_state, pull_request_obj):
+        """
+        This method checks the CI status of the specific commit of the PR
         and it labels the PR accordingly
+        :param combined_status_state
+        :param pull_request_obj
         """
         # pseudo-code
         # if WIP in title or PR is draft or CI failed:
@@ -127,16 +178,60 @@ class PRStatusBot:
         #       pr-awaiting-review
         #   else: # pr has a review that hasn't been dismissed yet no approval
         #       pr-awaiting-response
-        # # check if the open PR already has a pr-awaiting-review label
-        # if(self._check_awaiting_review_label(pr)):
-        #     logging.info(f'PR {pr.number} already contains the label pr-awaiting-review')
-        #     return
 
-        # # check the status of the PR and add label if successful
-        # if(self._is_successful(pr)):
-        #     self._add_label(pr)
-        logging.info(f'Labeling PR {pr.number} based on the status')
+        # combined status of PR can be 1 of the 3 potential states
+        # https://developer.github.com/v3/repos/statuses/#get-the-combined-status-for-a-specific-reference
+        if combined_status_state == 'failure':
+            ci_failed = True
+        elif combined_status_state == 'pending':
+            ci_pending = True
+
+        if 'WIP' in pull_request_obj.title:
+            wip_in_title = True
+        work_in_progress_conditions = wip_in_title or pull_request_obj.draft or ci_failed
+        if work_in_progress_conditions:
+            self._add_label(pull_request_obj, 'pr-work-in-progress')
+        elif ci_pending:
+            self._add_label(pull_request_obj, 'pr-awaiting-testing')
+        else:  # CI passed since status=successful
+            # parse reviews to assess count of approved/requested changes/commented/dismissed reviews
+            approves, request_changes, comments, dismissed = self._parse_reviews(pull_request_obj)
+            if approves > 0 and request_changes == 0:
+                self._add_label(pull_request_obj, 'pr-awaiting-merge')
+            else:
+                has_no_reviews = approves + request_changes - dismissed + comments == 0
+                request_change_dismissed = request_changes - dismissed == 0
+                if has_no_reviews or request_change_dismissed:
+                    self._add_label(pull_request_obj, 'pr-awaiting-review')
+                else:
+                    self._add_label(pull_request_obj, 'pr-awaiting-response')
         return
+
+    def _get_latest_commit(self, pull_request_obj):
+        """
+        This method returns the latest commit of the Pull Request
+        :param pull_request_obj
+        :returns latest_commit
+        """
+        latest_commit = pull_request_obj.get_commits()[pull_request_obj.commits - 1]
+        return latest_commit
+
+    def _is_stale_commit(self, commit_sha, pull_request_obj):
+        """
+        This method checks if the given commit is stale or not
+        :param commit_sha
+        :param pull_request_obj
+        :returns boolean
+        """
+        latest_commit = self._get_latest_commit(pull_request_obj)
+        latest_commit_sha = latest_commit.sha
+        if commit_sha == latest_commit_sha:
+            logging.info(f'Latest commit of PR {pull_request_obj.number}: {latest_commit_sha}')
+            logging.info(f'Current status belongs to stale commit {commit_sha}')
+            return False
+        else:
+            logging.info(f'Current commit {commit_sha} is latest commit of PR {pull_request_obj.number}')
+            return True
 
     def parse_webhook_data(self, event):
         """
@@ -156,11 +251,43 @@ class PRStatusBot:
             payload = json.loads(ast.literal_eval(event["Records"][0]['body'])['body'])
         except ValueError:
             raise Exception("Decoding JSON for payload failed")
+
+        # CI is run for non-PR commits as well
+        # for instance, after PR is merged into the master/v1.x branch
+        # we exit in such a case
+        # to detect if the status update is for a PR commit or a merged commit
+        # we rely on Target_URL in the event payload
+        # e.g. http//jenkins.mxnet-ci.amazon-ml.com/job/mxnet-validation/job/sanity/job/PR-18899/1/display/redirect
+        target_url = payload['target_url']
+        if 'PR' not in target_url:
+            logging.info('Status update doesnt belong to a PR commit')
+            return
+        # strip PR number from the target URL
+        # use raw string instead of normal string to make regex check pep8 compliant
+        pr_number = re.search(r"PR-(\d+)", target_url, re.IGNORECASE).group(1)
+
+        github_obj = self._get_github_object()
+        pull_request_obj = self._get_pull_request_object(github_obj, pr_number)
+
+        # verify PR is open
+        # return if PR is closed
+        if pull_request_obj.state == 'closed':
+            logging.info('PR is closed. No point in labeling')
+            return
+
+        # CI runs for stale commits
+        # return if its status update of a stale commit
+        commit_sha = payload['commit']['sha']
+        if self._is_stale_commit(commit_sha, pull_request_obj):
+            return
+
         context = payload['context']
         state = payload['state']
+
         logging.info(f'PR Context {context}')
         logging.info(f'PR State {state}')
-        # pr_number = payload['number']
-        # github_obj = self._get_github_object()
-        # pr_obj = self._get_pull_request_object(github_obj, pr_number)
-        # self._label_pr_based_on_status(pr_obj)
+
+        commit_obj = self._get_commit_object(github_obj, commit_sha)
+        combined_status_state = commit_obj.get_combined_status().state
+
+        self._label_pr_based_on_status(combined_status_state, pull_request_obj)
