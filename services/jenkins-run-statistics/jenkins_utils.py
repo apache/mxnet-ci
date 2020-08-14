@@ -155,7 +155,7 @@ class JenkinsRun(object):
         try:
             return ast.literal_eval(
                 requests.get(url=JENKINS_RUN_METADATA_API.format(job_url=self.parent_job.job_url, run_id=self.run_id),
-                             params={'tree': tree_filter_string}, allow_redirects=False).text)
+                             params={'tree': tree_filter_string}, allow_redirects=True).text)
         except SyntaxError:
             # Jenkins prints a 404 as HTML with a 200 code...
             logging.debug('Run %s does not exist, skipping...', self)
