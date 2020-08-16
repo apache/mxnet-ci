@@ -25,6 +25,26 @@ import secret_manager
 
 from github import Github
 
+# Define the constants
+# Github labels
+pr_work_in_progress_label = 'pr-work-in-progress'
+pr_awaiting_testing_label = 'pr-awaiting-testing'
+pr_awaiting_merge_label = 'pr-awaiting-merge'
+pr_awaiting_review_label = 'pr-awaiting-review'
+pr_awaiting_response_label = 'pr-awaiting-response'
+
+work_in_progress_title_substring = 'WIP'
+
+# CI state
+failure_state = 'failure'
+pending_state = 'pending'
+
+# Review state
+approved_state = 'APPROVED'
+changes_requested_state = 'CHANGES_REQUESTED'
+commented_state = 'COMMENTED'
+dismissed_state = 'DISMISSED'
+
 
 class PRStatusBot:
     def __init__(self,
@@ -87,7 +107,7 @@ class PRStatusBot:
         :param pr_number
         """
         repo = github_obj.get_repo(self.repo)
-        pr_obj = repo.get_pull(pr_number)
+        pr_obj = repo.get_pull(int(pr_number))
         return pr_obj
 
     def _get_commit_object(self, github_obj, commit_sha):
@@ -102,6 +122,9 @@ class PRStatusBot:
 
     def _drop_other_pr_labels(self, pr, desired_label):
         labels = pr.get_labels()
+        if not labels:
+            logging.info('No labels found')
+            return
 
         for label in labels:
             logging.info(f'Label:{label}')
@@ -150,15 +173,15 @@ class PRStatusBot:
         and Dismissed reviews
         :param pr
         """
-        approved_count, requested_changes_count, comment_count = 0, 0, 0
+        approved_count, requested_changes_count, comment_count, dismissed_count = 0, 0, 0, 0
         for review in pr.get_reviews():
-            if review.state == 'APPROVED':
+            if review.state == approved_state:
                 approved_count += 1
-            elif review.state == 'CHANGES_REQUESTED':
+            elif review.state == changes_requested_state:
                 requested_changes_count += 1
-            elif review.state == 'COMMENTED':
+            elif review.state == commented_state:
                 comment_count += 1
-            elif review.state == 'DISMISSED':
+            elif review.state == dismissed_state:
                 dismissed_count += 1
             else:
                 logging.error(f'Unknown review state {review.state}')
@@ -186,30 +209,31 @@ class PRStatusBot:
 
         # combined status of PR can be 1 of the 3 potential states
         # https://developer.github.com/v3/repos/statuses/#get-the-combined-status-for-a-specific-reference
-        if combined_status_state == 'failure':
+        wip_in_title, ci_failed, ci_pending = False, False, False
+        if combined_status_state == failure_state:
             ci_failed = True
-        elif combined_status_state == 'pending':
+        elif combined_status_state == pending_state:
             ci_pending = True
 
-        if 'WIP' in pull_request_obj.title:
+        if work_in_progress_title_substring in pull_request_obj.title:
             wip_in_title = True
         work_in_progress_conditions = wip_in_title or pull_request_obj.draft or ci_failed
         if work_in_progress_conditions:
-            self._add_label(pull_request_obj, 'pr-work-in-progress')
+            self._add_label(pull_request_obj, pr_work_in_progress_label)
         elif ci_pending:
-            self._add_label(pull_request_obj, 'pr-awaiting-testing')
+            self._add_label(pull_request_obj, pr_awaiting_testing_label)
         else:  # CI passed since status=successful
             # parse reviews to assess count of approved/requested changes/commented/dismissed reviews
             approves, request_changes, comments, dismissed = self._parse_reviews(pull_request_obj)
             if approves > 0 and request_changes == 0:
-                self._add_label(pull_request_obj, 'pr-awaiting-merge')
+                self._add_label(pull_request_obj, pr_awaiting_merge_label)
             else:
                 has_no_reviews = approves + request_changes - dismissed + comments == 0
                 request_change_dismissed = request_changes - dismissed == 0
                 if has_no_reviews or request_change_dismissed:
-                    self._add_label(pull_request_obj, 'pr-awaiting-review')
+                    self._add_label(pull_request_obj, pr_awaiting_review_label)
                 else:
-                    self._add_label(pull_request_obj, 'pr-awaiting-response')
+                    self._add_label(pull_request_obj, pr_awaiting_response_label)
         return
 
     def _get_latest_commit(self, pull_request_obj):
@@ -231,11 +255,11 @@ class PRStatusBot:
         latest_commit = self._get_latest_commit(pull_request_obj)
         latest_commit_sha = latest_commit.sha
         if commit_sha == latest_commit_sha:
-            logging.info(f'Latest commit of PR {pull_request_obj.number}: {latest_commit_sha}')
-            logging.info(f'Current status belongs to stale commit {commit_sha}')
+            logging.info(f'Current commit {commit_sha} is latest commit of PR {pull_request_obj.number}')
             return False
         else:
-            logging.info(f'Current commit {commit_sha} is latest commit of PR {pull_request_obj.number}')
+            logging.info(f'Latest commit of PR {pull_request_obj.number}: {latest_commit_sha}')
+            logging.info(f'Current status belongs to stale commit {commit_sha}')
             return True
 
     def parse_webhook_data(self, event):
