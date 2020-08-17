@@ -120,6 +120,16 @@ class PRStatusBot:
         commit_obj = repo.get_commit(commit_sha)
         return commit_obj
 
+    def _is_mxnet_committer(self, github_obj, reviewer):
+        """
+        This method checks if the Pull Request reviewer is a member of MXNet committers
+        It uses the Github API for fetching team members of a repo
+        Only a Committer can access [read/write] to Apache MXNet Committer team on Github
+        Retrieved the Team ID of the Apache MXNet Committer team on Github using a Committer's credentials
+        """
+        team = github_obj.get_organization('apache').get_team(2413476)
+        return team.has_in_members(reviewer)
+
     def _drop_other_pr_labels(self, pr, desired_label):
         labels = pr.get_labels()
         if not labels:
@@ -166,15 +176,30 @@ class PRStatusBot:
                 return True
         return False
 
-    def _parse_reviews(self, pr):
+    def _get_reviewer(self, review):
+        """
+        This method returns the reviewer of a particular PR review
+        :param PullRequestReview
+        :return NamedUser
+        """
+        return review.user
+
+    def _parse_reviews(self, github_obj, pr):
         """
         This method parses through the reviews of the PR and returns count of
         4 states: Approved reviews, Comment reviews, Requested Changes reviews
         and Dismissed reviews
+        Note: Only reviews by MXNet Committers are considered.
+        :param github_obj
         :param pr
         """
         approved_count, requested_changes_count, comment_count, dismissed_count = 0, 0, 0, 0
         for review in pr.get_reviews():
+            # continue if the review is by non-committer
+            reviewer = self._get_reviewer(review)
+            if not self._is_mxnet_committer(github_obj, reviewer):
+                continue
+
             if review.state == APPROVED_STATE:
                 approved_count += 1
             elif review.state == CHANGES_REQUESTED_STATE:
@@ -187,10 +212,11 @@ class PRStatusBot:
                 logging.error(f'Unknown review state {review.state}')
         return approved_count, requested_changes_count, comment_count, dismissed_count
 
-    def _label_pr_based_on_status(self, combined_status_state, pull_request_obj):
+    def _label_pr_based_on_status(self, github_obj, combined_status_state, pull_request_obj):
         """
         This method checks the CI status of the specific commit of the PR
         and it labels the PR accordingly
+        :param github_obj
         :param combined_status_state
         :param pull_request_obj
         """
@@ -224,7 +250,7 @@ class PRStatusBot:
             self._add_label(pull_request_obj, PR_AWAITING_TESTING_LABEL)
         else:  # CI passed since status=successful
             # parse reviews to assess count of approved/requested changes/commented/dismissed reviews
-            approves, request_changes, comments, dismissed = self._parse_reviews(pull_request_obj)
+            approves, request_changes, comments, dismissed = self._parse_reviews(github_obj, pull_request_obj)
             if approves > 0 and request_changes == 0:
                 self._add_label(pull_request_obj, PR_AWAITING_MERGE_LABEL)
             else:
@@ -319,4 +345,4 @@ class PRStatusBot:
         commit_obj = self._get_commit_object(github_obj, commit_sha)
         combined_status_state = commit_obj.get_combined_status().state
 
-        self._label_pr_based_on_status(combined_status_state, pull_request_obj)
+        self._label_pr_based_on_status(github_obj, combined_status_state, pull_request_obj)
