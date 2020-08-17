@@ -27,23 +27,23 @@ from github import Github
 
 # Define the constants
 # Github labels
-pr_work_in_progress_label = 'pr-work-in-progress'
-pr_awaiting_testing_label = 'pr-awaiting-testing'
-pr_awaiting_merge_label = 'pr-awaiting-merge'
-pr_awaiting_review_label = 'pr-awaiting-review'
-pr_awaiting_response_label = 'pr-awaiting-response'
+PR_WORK_IN_PROGRESS_LABEL = 'pr-work-in-progress'
+PR_AWAITING_TESTING_LABEL = 'pr-awaiting-testing'
+PR_AWAITING_MERGE_LABEL = 'pr-awaiting-merge'
+PR_AWAITING_REVIEW_LABEL = 'pr-awaiting-review'
+PR_AWAITING_RESPONSE_LABEL = 'pr-awaiting-response'
 
-work_in_progress_title_substring = 'WIP'
+WORK_IN_PROGRESS_TITLE_SUBSTRING = 'WIP'
 
 # CI state
-failure_state = 'failure'
-pending_state = 'pending'
+FAILURE_STATE = 'failure'
+PENDING_STATE = 'pending'
 
 # Review state
-approved_state = 'APPROVED'
-changes_requested_state = 'CHANGES_REQUESTED'
-commented_state = 'COMMENTED'
-dismissed_state = 'DISMISSED'
+APPROVED_STATE = 'APPROVED'
+CHANGES_REQUESTED_STATE = 'CHANGES_REQUESTED'
+COMMENTED_STATE = 'COMMENTED'
+DISMISSED_STATE = 'DISMISSED'
 
 
 class PRStatusBot:
@@ -175,13 +175,13 @@ class PRStatusBot:
         """
         approved_count, requested_changes_count, comment_count, dismissed_count = 0, 0, 0, 0
         for review in pr.get_reviews():
-            if review.state == approved_state:
+            if review.state == APPROVED_STATE:
                 approved_count += 1
-            elif review.state == changes_requested_state:
+            elif review.state == CHANGES_REQUESTED_STATE:
                 requested_changes_count += 1
-            elif review.state == commented_state:
+            elif review.state == COMMENTED_STATE:
                 comment_count += 1
-            elif review.state == dismissed_state:
+            elif review.state == DISMISSED_STATE:
                 dismissed_count += 1
             else:
                 logging.error(f'Unknown review state {review.state}')
@@ -210,30 +210,30 @@ class PRStatusBot:
         # combined status of PR can be 1 of the 3 potential states
         # https://developer.github.com/v3/repos/statuses/#get-the-combined-status-for-a-specific-reference
         wip_in_title, ci_failed, ci_pending = False, False, False
-        if combined_status_state == failure_state:
+        if combined_status_state == FAILURE_STATE:
             ci_failed = True
-        elif combined_status_state == pending_state:
+        elif combined_status_state == PENDING_STATE:
             ci_pending = True
 
-        if work_in_progress_title_substring in pull_request_obj.title:
+        if WORK_IN_PROGRESS_TITLE_SUBSTRING in pull_request_obj.title:
             wip_in_title = True
         work_in_progress_conditions = wip_in_title or pull_request_obj.draft or ci_failed
         if work_in_progress_conditions:
-            self._add_label(pull_request_obj, pr_work_in_progress_label)
+            self._add_label(pull_request_obj, PR_WORK_IN_PROGRESS_LABEL)
         elif ci_pending:
-            self._add_label(pull_request_obj, pr_awaiting_testing_label)
+            self._add_label(pull_request_obj, PR_AWAITING_TESTING_LABEL)
         else:  # CI passed since status=successful
             # parse reviews to assess count of approved/requested changes/commented/dismissed reviews
             approves, request_changes, comments, dismissed = self._parse_reviews(pull_request_obj)
             if approves > 0 and request_changes == 0:
-                self._add_label(pull_request_obj, pr_awaiting_merge_label)
+                self._add_label(pull_request_obj, PR_AWAITING_MERGE_LABEL)
             else:
                 has_no_reviews = approves + request_changes - dismissed + comments == 0
                 request_change_dismissed = request_changes - dismissed == 0
                 if has_no_reviews or request_change_dismissed:
-                    self._add_label(pull_request_obj, pr_awaiting_review_label)
+                    self._add_label(pull_request_obj, PR_AWAITING_REVIEW_LABEL)
                 else:
-                    self._add_label(pull_request_obj, pr_awaiting_response_label)
+                    self._add_label(pull_request_obj, PR_AWAITING_RESPONSE_LABEL)
         return
 
     def _get_latest_commit(self, pull_request_obj):
