@@ -198,6 +198,7 @@ class PRStatusBot:
             # continue if the review is by non-committer
             reviewer = self._get_reviewer(review)
             if not self._is_mxnet_committer(github_obj, reviewer):
+                logging.info(f'Review is by non-MXNet Committer: {reviewer}. Ignore.')
                 continue
 
             if review.state == APPROVED_STATE:
