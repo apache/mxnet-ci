@@ -1,0 +1,9 @@
+{
+	"target_url": "http://jenkins.mxnet-ci.amazon-ml.com/job/mxnet-validation/job/website/job/PR-18785/9/display/redirect",	
+	"context": "ci/jenkins/mxnet-validation/website",
+	"description": "Job has been enqueued",
+	"state": "pending",
+	"commit": {
+		"sha": "4ef8db76e7d7db4a9efd97ea06452ffd859994ac"
+	}
+}

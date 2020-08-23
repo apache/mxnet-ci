@@ -58,3 +58,7 @@ def run_lambda(event, context):
     except Exception as e:
         logging.error("CI bot raised an exception! %s", exc_info=e)
     logging.info("Lambda triggered successfully")
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+    run_lambda(None, None)

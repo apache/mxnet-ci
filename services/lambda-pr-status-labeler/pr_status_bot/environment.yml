@@ -14,7 +14,7 @@ test:
 prod:
     SECRET_NAME: REDACTED
     DOMAIN_NAME: REDACTED
-    SECRET_ENDPOINT_URL: https://secretsmanager.us-west-2.amazonaws.com    
+    SECRET_ENDPOINT_URL: https://secretsmanager.us-west-2.amazonaws.com
     SECRET_ENDPOINT_REGION: us-west-2
     SECRET_ARN:  REDACTED
     LOGGING_LEVEL: DEBUG

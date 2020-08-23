@@ -289,31 +289,16 @@ class PRStatusBot:
             logging.info(f'Current status belongs to stale commit {commit_sha}')
             return True
 
-    def parse_webhook_data(self, event):
+    def parse_payload(self, payload):
         """
-        This method handles the processing for each PR depending on the appropriate Github event
-        information provided by the Github Webhook.
+        This method parses the payload and process it according to the event status
         """
-        try:
-            github_event = ast.literal_eval(event["Records"][0]['body'])['headers']["X-GitHub-Event"]
-            logging.info(f"github event {github_event}")
-        except KeyError:
-            raise Exception("Not a GitHub Event")
-
-        if not self._secure_webhook(event):
-            raise Exception("Failed to validate WebHook security")
-
-        try:
-            payload = json.loads(ast.literal_eval(event["Records"][0]['body'])['body'])
-        except ValueError:
-            raise Exception("Decoding JSON for payload failed")
-
         # CI is run for non-PR commits as well
         # for instance, after PR is merged into the master/v1.x branch
         # we exit in such a case
         # to detect if the status update is for a PR commit or a merged commit
         # we rely on Target_URL in the event payload
-        # e.g. http//jenkins.mxnet-ci.amazon-ml.com/job/mxnet-validation/job/sanity/job/PR-18899/1/display/redirect
+        # e.g. http//jenkins.mxnet-ci.amazon-ml.com/job/mxnet-validation/job/sanity/job/PR-18899/1/display/redirect        
         target_url = payload['target_url']
         if 'PR' not in target_url:
             logging.info('Status update doesnt belong to a PR commit')
@@ -347,3 +332,24 @@ class PRStatusBot:
         combined_status_state = commit_obj.get_combined_status().state
 
         self._label_pr_based_on_status(github_obj, combined_status_state, pull_request_obj)
+
+    def parse_webhook_data(self, event):
+        """
+        This method handles the processing for each PR depending on the appropriate Github event
+        information provided by the Github Webhook.
+        """
+        try:
+            github_event = ast.literal_eval(event["Records"][0]['body'])['headers']["X-GitHub-Event"]
+            logging.info(f"github event {github_event}")
+        except KeyError:
+            raise Exception("Not a GitHub Event")
+
+        if not self._secure_webhook(event):
+            raise Exception("Failed to validate WebHook security")
+
+        try:
+            payload = json.loads(ast.literal_eval(event["Records"][0]['body'])['body'])
+        except ValueError:
+            raise Exception("Decoding JSON for payload failed")
+
+        self.parse_payload(payload)
