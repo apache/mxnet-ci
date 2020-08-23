@@ -33,8 +33,7 @@ def get_secret():
     region_name = os.environ.get("region_name")
     endpoint_url = "https://secretsmanager.{}.amazonaws.com".format(region_name)
     session = boto3.session.Session()
-    print(secret_name)
-    print(region_name)
+
     client = session.client(
         service_name='secretsmanager',
         region_name=region_name,

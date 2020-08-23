@@ -154,16 +154,15 @@ class PRStatusBot:
             logging.info(f'PR {pr.number} already contains the label {label}')
             return
 
+        logging.info(f'BOT Labels: {label}')
         # try:
         #     pr.add_to_labels(label)
         # except Exception:
         #     logging.error(f'Unable to add label {label}')
 
         # verify that label has been correctly added
-        if(self._has_desired_label(pr, label)):
-            logging.info(f'Successfully labeled {label} for PR-{pr.number}')
-        else:
-            logging.info(f'Not labeled {label}')
+        # if(self._has_desired_label(pr, label)):
+        #     logging.info(f'Successfully labeled {label} for PR-{pr.number}')
         return
 
     def _has_desired_label(self, pr, desired_label):
@@ -325,12 +324,12 @@ class PRStatusBot:
         context = payload['context']
         state = payload['state']
 
-        logging.info(f'PR Context {context}')
-        logging.info(f'PR State {state}')
+        logging.info(f'PR Context: {context}')
+        logging.info(f'Context State: {state}')
 
         commit_obj = self._get_commit_object(github_obj, commit_sha)
         combined_status_state = commit_obj.get_combined_status().state
-
+        logging.info(f'PR Combined Status State: {combined_status_state}')
         self._label_pr_based_on_status(github_obj, combined_status_state, pull_request_obj)
 
     def parse_webhook_data(self, event):
