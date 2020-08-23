@@ -242,6 +242,7 @@ class PRStatusBot:
             ci_pending = True
 
         if WORK_IN_PROGRESS_TITLE_SUBSTRING in pull_request_obj.title:
+            logging.info('WIP in PR Title')
             wip_in_title = True
         work_in_progress_conditions = wip_in_title or pull_request_obj.draft or ci_failed
         if work_in_progress_conditions:

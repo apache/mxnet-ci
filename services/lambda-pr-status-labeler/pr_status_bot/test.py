@@ -52,11 +52,17 @@ def check_pr_awaiting_merge():
 
 
 def check_commit_with_non_committer_review():
-    check_ci_success()
+    # https://github.com/apache/incubator-mxnet/pull/16025
+    # PR passes CI but has 1 non-MX Committer review
+    data = prepare_input(16025, "unix-gpu", "success", "fb343b55ec4721c9cce4422224c246eb3a188bb2")
+    load_and_test(data)
 
 
 def check_commit_with_no_review():
-    check_ci_success()
+    # https://github.com/apache/incubator-mxnet/pull/18983
+    # PR has no review but CI passes
+    data = prepare_input(18983, "unix-gpu", "success", "26fb1921b6e09226146b4b90d2d995b7a018347d")
+    load_and_test(data)
 
 
 def check_wip_title_pr():
