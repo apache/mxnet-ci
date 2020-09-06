@@ -13,6 +13,7 @@ logging.getLogger('botocore').setLevel(logging.CRITICAL)
 
 release_job_type = ['mxnet_lib/static', 'python/pypi']
 
+
 def get_jenkins_obj(secret):
     """
     This method returns an object of Jenkins instantiated using username, password
@@ -54,7 +55,7 @@ def is_latest_day_build(current_build):
     current_build_timestamp = get_build_timestamp(current_build)
     current_time_stamp = datetime.now().replace(tzinfo=timezone.utc)
     # if current build is within 24 hours of the current time
-    seconds_difference = (current_time_stamp-current_build_timestamp).total_seconds()
+    seconds_difference = (current_time_stamp - current_build_timestamp).total_seconds()
     hour_difference = divmod(seconds_difference, 3600)[0]
     if(hour_difference < 24):
         return True
@@ -162,15 +163,30 @@ def jenkins_pipeline_monitor():
     # get builds scheduled for the latest day
     latest_day_builds = get_latest_day_builds(job, latest_build_number)
     logging.info(f'latest builds {latest_day_builds}')
+
+    # exit if no builds found
+    if not latest_day_builds:
+        logging.error('No builds for the latest day')
+        return
+
     # filter latest day builds by desired build type a.k.a release job type
     filtered_builds = filter_by_release_job_type(latest_day_builds)
     logging.info(f'Builds filtered by desired release job type : {filtered_builds}')
 
+    # exit if no builds of desired build type
+    if not filtered_builds:
+        logging.error('No builds of desired type')
+        return
+
     desired_cause = 'hudson.model.Cause$UpstreamCause'
     filtered_builds = filter_by_upstream_cause(filtered_builds, desired_cause)
 
-    logging.info(f'Filtered builds by {desired_cause} : {filtered_builds}')
-    status_check(filtered_builds)
+    # exit if builds not triggered by UpstreamCause
+    if not filtered_builds:
+        logging.error(f'Builds dont belong to desired cause:{desired_cause}')
+    else:
+        logging.info(f'Filtered builds by {desired_cause} : {filtered_builds}')
+        status_check(filtered_builds)
 
 
 def lambda_handler(event, context):
