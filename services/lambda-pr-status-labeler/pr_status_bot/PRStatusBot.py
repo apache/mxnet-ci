@@ -175,6 +175,19 @@ class PRStatusBot:
                 return True
         return False
 
+    def get_review_counts(self, review, approved_count, requested_changes_count, comment_count, dismissed_count):
+        if review.state == APPROVED_STATE:
+            approved_count += 1
+        elif review.state == CHANGES_REQUESTED_STATE:
+            requested_changes_count += 1
+        elif review.state == COMMENTED_STATE:
+            comment_count += 1
+        elif review.state == DISMISSED_STATE:
+            dismissed_count += 1
+        else:
+            logging.error(f'Unknown review state {review.state}')
+        return approved_count, requested_changes_count, comment_count, dismissed_count
+
     def _parse_reviews(self, github_obj, pr):
         """
         This method parses through the reviews of the PR and returns count of
@@ -191,17 +204,7 @@ class PRStatusBot:
             if not self._is_mxnet_committer(github_obj, reviewer):
                 logging.info(f'Review is by non-MXNet Committer: {reviewer}. Ignore.')
                 continue
-
-            if review.state == APPROVED_STATE:
-                approved_count += 1
-            elif review.state == CHANGES_REQUESTED_STATE:
-                requested_changes_count += 1
-            elif review.state == COMMENTED_STATE:
-                comment_count += 1
-            elif review.state == DISMISSED_STATE:
-                dismissed_count += 1
-            else:
-                logging.error(f'Unknown review state {review.state}')
+            approved_count, requested_changes_count, comment_count, dismissed_count = self.get_review_counts(review, approved_count, requested_changes_count, comment_count, dismissed_count)
         return approved_count, requested_changes_count, comment_count, dismissed_count
 
     def _label_pr_based_on_status(self, github_obj, combined_status_state, pull_request_obj):
