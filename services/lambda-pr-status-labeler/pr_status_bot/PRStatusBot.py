@@ -175,14 +175,6 @@ class PRStatusBot:
                 return True
         return False
 
-    def _get_reviewer(self, review):
-        """
-        This method returns the reviewer of a particular PR review
-        :param PullRequestReview
-        :return NamedUser
-        """
-        return review.user
-
     def _parse_reviews(self, github_obj, pr):
         """
         This method parses through the reviews of the PR and returns count of
@@ -195,7 +187,7 @@ class PRStatusBot:
         approved_count, requested_changes_count, comment_count, dismissed_count = 0, 0, 0, 0
         for review in pr.get_reviews():
             # continue if the review is by non-committer
-            reviewer = self._get_reviewer(review)
+            reviewer = review.user
             if not self._is_mxnet_committer(github_obj, reviewer):
                 logging.info(f'Review is by non-MXNet Committer: {reviewer}. Ignore.')
                 continue
