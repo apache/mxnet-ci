@@ -19,7 +19,7 @@ import os
 import boto3
 import logging
 
-from PRStatusBot import PRStatusBot
+from PRStatusBot import PRStatusBot, GithubObj
 
 logging.getLogger().setLevel(logging.INFO)
 logging.getLogger('boto3').setLevel(logging.CRITICAL)
@@ -50,8 +50,8 @@ def send_to_sqs(event, context):
 
 def run_lambda(event, context):
     logging.info(f'event {event}')
-
-    pr_status_bot = PRStatusBot(apply_secret=True)
+    github_obj = GithubObj(apply_secret=True)
+    pr_status_bot = PRStatusBot(github_obj=github_obj.github_object, apply_secret=True)
 
     try:
         pr_status_bot.parse_webhook_data(event)

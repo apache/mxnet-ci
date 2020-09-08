@@ -46,22 +46,26 @@ COMMENTED_STATE = 'COMMENTED'
 DISMISSED_STATE = 'DISMISSED'
 
 
-class PRStatusBot:
+class GithubObj:
     def __init__(self,
-                 repo=os.environ.get("repo"),
                  github_personal_access_token=None,
                  apply_secret=True):
         """
-        Initializes the PR Status Bot
-        :param repo: GitHub repository that is being referenced
+        Initializes the Github Object
         :param github_personal_access_token: GitHub authentication token (Personal access token)
         :param apply_secret: GitHub secret credential (Secret credential that is unique to a GitHub developer)
         """
-        self.repo = repo
         self.github_personal_access_token = github_personal_access_token
         if apply_secret:
             self._get_secret()
-        self.github_obj = self._get_github_object()
+        self.github_object = self._get_github_object()
+
+    def _get_github_object(self):
+        """
+        This method returns github object initialized with Github personal access token
+        """
+        github_obj = Github(self.github_personal_access_token)
+        return github_obj
 
     def _get_secret(self):
         """
@@ -69,6 +73,28 @@ class PRStatusBot:
         """
         secret = json.loads(secret_manager.get_secret())
         self.github_personal_access_token = secret["github_personal_access_token"]
+
+
+class PRStatusBot:
+    def __init__(self,
+                 repo=os.environ.get("repo"),
+                 github_obj=None,
+                 apply_secret=True):
+        """
+        Initializes the PR Status Bot
+        :param repo: GitHub repository that is being referenced
+        :param apply_secret: GitHub secret credential (Secret credential that is unique to a GitHub developer)
+        """
+        self.repo = repo
+        self.github_obj = github_obj
+        if apply_secret:
+            self._get_secret()
+
+    def _get_secret(self):
+        """
+        This method is to get secret value from Secrets Manager
+        """
+        secret = json.loads(secret_manager.get_secret())
         self.webhook_secret = secret["webhook_secret"]
 
     def _secure_webhook(self, event):
@@ -93,13 +119,6 @@ class PRStatusBot:
 
         # Validating signatures match
         return hmac.compare_digest(git_signed, secret_sign)
-
-    def _get_github_object(self):
-        """
-        This method returns github object initialized with Github personal access token
-        """
-        github_obj = Github(self.github_personal_access_token)
-        return github_obj
 
     def _get_pull_request_object(self, pr_number):
         """
@@ -290,7 +309,7 @@ class PRStatusBot:
         # we exit in such a case
         # to detect if the status update is for a PR commit or a merged commit
         # we rely on Target_URL in the event payload
-        # e.g. http//jenkins.mxnet-ci.amazon-ml.com/job/mxnet-validation/job/sanity/job/PR-18899/1/display/redirect        
+        # e.g. http//jenkins.mxnet-ci.amazon-ml.com/job/mxnet-validation/job/sanity/job/PR-18899/1/display/redirect
         target_url = payload['target_url']
         if 'PR' not in target_url:
             logging.info('Status update doesnt belong to a PR commit')
