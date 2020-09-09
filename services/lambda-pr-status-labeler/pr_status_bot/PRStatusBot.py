@@ -38,6 +38,7 @@ WORK_IN_PROGRESS_TITLE_SUBSTRING = 'WIP'
 # CI state
 FAILURE_STATE = 'failure'
 PENDING_STATE = 'pending'
+SUCCESS_STATE = 'success'
 
 # Review state
 APPROVED_STATE = 'APPROVED'
@@ -87,6 +88,7 @@ class PRStatusBot:
         """
         self.repo = repo
         self.github_obj = github_obj
+        self.latest_commit_sha = None
         if apply_secret:
             self._get_secret()
 
@@ -193,36 +195,51 @@ class PRStatusBot:
                 return True
         return False
 
-    def get_review_counts(self, review, approved_count, requested_changes_count, comment_count, dismissed_count):
+    def get_review_counts(self, review, approvers, change_requesters, commenters, dismissed):
         if review.state == APPROVED_STATE:
-            approved_count += 1
+            approvers.append(review.user.login)
         elif review.state == CHANGES_REQUESTED_STATE:
-            requested_changes_count += 1
+            change_requesters.append(review.user.login)
         elif review.state == COMMENTED_STATE:
-            comment_count += 1
+            commenters.append(review.user.login)
         elif review.state == DISMISSED_STATE:
-            dismissed_count += 1
+            dismissed.append(review.user.login)
         else:
             logging.error(f'Unknown review state {review.state}')
-        return approved_count, requested_changes_count, comment_count, dismissed_count
+        return approvers, change_requesters, commenters, dismissed
 
     def _parse_reviews(self, pr):
         """
         This method parses through the reviews of the PR and returns count of
-        4 states: Approved reviews, Comment reviews, Requested Changes reviews
-        and Dismissed reviews
+        3 states: Approved reviews, Comment reviews, Requested Changes reviews
+
+        All these 3 states take into account if there are dismissed reviews.
+        Approved review / Requested changes review can be dismissed.
+        If dismissed, then the review doesn't count.
         Note: Only reviews by MXNet Committers are considered.
         :param pr
         """
-        approved_count, requested_changes_count, comment_count, dismissed_count = 0, 0, 0, 0
+        approvers = []
+        change_requesters = []
+        commenters = []
+        dismissed = []
         for review in pr.get_reviews():
+            # continue if the review is for a stale commit
+            if(review.commit_id != self.latest_commit_sha):
+                continue
             # continue if the review is by non-committer
             reviewer = review.user
             if not self._is_mxnet_committer(reviewer):
                 logging.info(f'Review is by non-MXNet Committer: {reviewer}. Ignore.')
                 continue
-            approved_count, requested_changes_count, comment_count, dismissed_count = self.get_review_counts(review, approved_count, requested_changes_count, comment_count, dismissed_count)
-        return approved_count, requested_changes_count, comment_count, dismissed_count
+            approvers, change_requesters, commenters, dismissed = self.get_review_counts(review, approvers, change_requesters, commenters, dismissed)
+        approvers = list(set(approvers) - set(dismissed))
+        change_requesters = list(set(change_requesters) - set(dismissed))
+        commenters = list(set(commenters))
+        approved_count = len(approvers) if len(approvers) else 0
+        requested_changes_count = len(change_requesters) if len(change_requesters) else 0
+        comment_count = len(commenters) if len(commenters) else 0
+        return approved_count, requested_changes_count, comment_count
 
     def _label_pr_based_on_status(self, combined_status_state, pull_request_obj):
         """
@@ -261,14 +278,16 @@ class PRStatusBot:
         elif ci_pending:
             self._add_label(pull_request_obj, PR_AWAITING_TESTING_LABEL)
         else:  # CI passed since status=successful
-            # parse reviews to assess count of approved/requested changes/commented/dismissed reviews
-            approves, request_changes, comments, dismissed = self._parse_reviews(pull_request_obj)
+            # parse reviews to assess count of approved/requested changes/commented reviews
+            # make sure you take into account dismissed reviews
+            approves, request_changes, comments = self._parse_reviews(pull_request_obj)
             if approves > 0 and request_changes == 0:
                 self._add_label(pull_request_obj, PR_AWAITING_MERGE_LABEL)
             else:
-                has_no_reviews = approves + request_changes - dismissed + comments == 0
-                request_change_dismissed = request_changes - dismissed == 0
-                if has_no_reviews or request_change_dismissed:
+                # decisive review means approve/request change
+                # comment is a non-decisive review
+                has_no_decisive_reviews = approves + request_changes == 0
+                if has_no_decisive_reviews:
                     self._add_label(pull_request_obj, PR_AWAITING_REVIEW_LABEL)
                 else:
                     self._add_label(pull_request_obj, PR_AWAITING_RESPONSE_LABEL)
@@ -291,12 +310,12 @@ class PRStatusBot:
         :returns boolean
         """
         latest_commit = self._get_latest_commit(pull_request_obj)
-        latest_commit_sha = latest_commit.sha
-        if commit_sha == latest_commit_sha:
+        self.latest_commit_sha = latest_commit.sha
+        if commit_sha == self.latest_commit_sha:
             logging.info(f'Current commit {commit_sha} is latest commit of PR {pull_request_obj.number}')
             return False
         else:
-            logging.info(f'Latest commit of PR {pull_request_obj.number}: {latest_commit_sha}')
+            logging.info(f'Latest commit of PR {pull_request_obj.number}: {self.latest_commit_sha}')
             logging.info(f'Current status belongs to stale commit {commit_sha}')
             return True
 
@@ -313,7 +332,7 @@ class PRStatusBot:
         target_url = payload['target_url']
         if 'PR' not in target_url:
             logging.info('Status update doesnt belong to a PR commit')
-            return
+            return 1
         # strip PR number from the target URL
         # use raw string instead of normal string to make regex check pep8 compliant
         pr_number = re.search(r"PR-(\d+)", target_url, re.IGNORECASE).group(1)
@@ -324,7 +343,7 @@ class PRStatusBot:
         # return if PR is closed
         if pull_request_obj.state == 'closed':
             logging.info('PR is closed. No point in labeling')
-            return
+            return 2
 
         # CI runs for stale commits
         # return if its status update of a stale commit
