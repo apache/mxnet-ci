@@ -245,11 +245,11 @@ class PRStatusBot:
         comment_count = len(commenters) if len(commenters) else 0
         return approved_count, requested_changes_count, comment_count
 
-    def _label_pr_based_on_status(self, combined_status_state, pull_request_obj):
+    def _label_pr_based_on_status(self, full_build_status_state, pull_request_obj):
         """
         This method checks the CI status of the specific commit of the PR
         and it labels the PR accordingly
-        :param combined_status_state
+        :param full_build_status_state
         :param pull_request_obj
         """
         # pseudo-code
@@ -268,9 +268,9 @@ class PRStatusBot:
         # combined status of PR can be 1 of the 3 potential states
         # https://developer.github.com/v3/repos/statuses/#get-the-combined-status-for-a-specific-reference
         wip_in_title, ci_failed, ci_pending = False, False, False
-        if combined_status_state == FAILURE_STATE:
+        if full_build_status_state == FAILURE_STATE:
             ci_failed = True
-        elif combined_status_state == PENDING_STATE:
+        elif full_build_status_state == PENDING_STATE:
             ci_pending = True
 
         if WORK_IN_PROGRESS_TITLE_SUBSTRING in pull_request_obj.title:
@@ -323,6 +323,23 @@ class PRStatusBot:
             logging.info(f'Current status belongs to stale commit {commit_sha}')
             return True
 
+    def _get_full_build_status_from_combined_status(self, commit_obj, combined_status_state):
+        """
+        Due to staggered build pipelines, combined status isn't reflective of full build status
+        i.e. When sanity passes, combined_status_state = Success
+        It should be pending since other pipelines aren't successful yet.
+        However, combined_status_state only takes into account the pipelines that have been triggered until that point.
+        Thus, manually check if combined_status_state and length of combined_statuses
+        """
+        combined_status_list = commit_obj.get_combined_status().statuses
+        combined_status_length = len(combined_status_list)
+        logging.info(f'Combined Status Length: {combined_status_length}')
+        if combined_status_state == SUCCESS_STATE and combined_status_length == 1:
+            # Only sanity build has passed; rest of the builds haven't been triggered
+            return PENDING_STATE
+        # Full build has been triggered
+        return combined_status_state
+
     def parse_payload(self, payload):
         """
         This method parses the payload and process it according to the event status
@@ -340,7 +357,7 @@ class PRStatusBot:
         # strip PR number from the target URL
         # use raw string instead of normal string to make regex check pep8 compliant
         pr_number = re.search(r"PR-(\d+)", target_url, re.IGNORECASE).group(1)
-
+        logging.info(f'--------- PR : {pr_number} ----------')
         pull_request_obj = self._get_pull_request_object(pr_number)
 
         # verify PR is open
@@ -364,7 +381,9 @@ class PRStatusBot:
         commit_obj = self._get_commit_object(commit_sha)
         combined_status_state = commit_obj.get_combined_status().state
         logging.info(f'PR Combined Status State: {combined_status_state}')
-        self._label_pr_based_on_status(combined_status_state, pull_request_obj)
+        full_build_status_state = self._get_full_build_status_from_combined_status(commit_obj, combined_status_state)
+        logging.info(f'PR Full Build Status State: {full_build_status_state}')
+        self._label_pr_based_on_status(full_build_status_state, pull_request_obj)
 
     def parse_webhook_data(self, event):
         """
