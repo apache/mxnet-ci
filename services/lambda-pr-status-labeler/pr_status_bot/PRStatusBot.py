@@ -165,7 +165,7 @@ class PRStatusBot:
             if label.name.startswith('pr-') and label.name != desired_label:
                 try:
                     logging.info(f'Removing {label}')
-                    # pr.remove_from_labels(label)
+                    pr.remove_from_labels(label)
                 except Exception:
                     logging.error(f'Error while removing the label {label}')
 
@@ -179,10 +179,10 @@ class PRStatusBot:
             return
 
         logging.info(f'BOT Labels: {label}')
-        # try:
-        #     pr.add_to_labels(label)
-        # except Exception:
-        #     logging.error(f'Unable to add label {label}')
+        try:
+            pr.add_to_labels(label)
+        except Exception:
+            logging.error(f'Unable to add label {label}')
 
         # verify that label has been correctly added
         # if(self._has_desired_label(pr, label)):
