@@ -44,9 +44,18 @@ write_files:
       #!/bin/sh
       set -ex
       python3 /home/jenkins_slave/scripts/slave-autoconnect.py --slave-name-file=/home/jenkins_slave/jenkins_slave_name --master-file=/home/jenkins_slave/jenkins_master_url --master-private-file=/home/jenkins_slave/jenkins_master_private_url > /home/jenkins_slave/auto-connect.log
+  - path: /etc/fstab
+    content: |
+      /swapfile none swap sw 0 0
+    append: true
 
 
 runcmd:
+  - [ "fallocate", "-l", "10G", "/swapfile" ]
+  - [ "chown", "root:root", "/swapfile" ]
+  - [ "chmod", "0600", "/swapfile" ]
+  - [ "mkswap", "/swapfile" ]
+  - [ "swapon", "/swapfile" ]
   - [ "useradd", "jenkins_slave" ]
   - [ "usermod", "-L", "jenkins_slave" ]
   - [ "mkdir", "-p", "/home/jenkins_slave/remoting", "/home/jenkins_slave/scripts" ]
