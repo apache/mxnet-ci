@@ -22,8 +22,9 @@ packages:
   - docker.io
   - qemu
   - binfmt-support
-  - qemu-user-static
   - awscli
+  - nfs-common
+  - libattr1-dev
 
 write_files:
   - path: /etc/apt/preferences
@@ -69,6 +70,7 @@ runcmd:
   - [ "chmod", "+x", "/home/jenkins_slave/scripts/slave-autoconnect.py", "/home/jenkins_slave/scripts/launch-autoconnect.sh" ]
   - [ "curl", "-L", "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-Linux-x86_64", "-o", "/usr/bin/docker-compose" ]
   - [ "chmod", "+x", "/usr/bin/docker-compose" ]
+  - [ "apt-get", "install", "-t", "focal", "-y", "qemu-user-static" ]
   - [ "wget", "-O", "/tmp/qemu-binfmt-conf.sh", "https://raw.githubusercontent.com/qemu/qemu/stable-4.1/scripts/qemu-binfmt-conf.sh" ]
   - [ "chmod", "+x", "/tmp/qemu-binfmt-conf.sh" ]
   - [ "/tmp/qemu-binfmt-conf.sh", "--persistent", "yes", "--qemu-suffix", "-static", "--qemu-path", "/usr/bin", "--systemd", "ALL" ]
