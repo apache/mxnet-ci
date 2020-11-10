@@ -70,8 +70,10 @@ def wait_for_instance(instance, private_key):
     current_state = instance.state
     logging.info("Waiting for instance to install software and shut down. Current state: %s", instance.state['Name'])
     windows_password = None
+    last_log_size = 0
+    last_stage2_log_size = 0
     while (current_state['Code'] != 80):
-        time.sleep(5)
+        time.sleep(20)
         i = ec2Client.Instance(instance_id)
         if current_state['Code'] != i.state['Code']:
             current_state = i.state
@@ -92,11 +94,20 @@ def wait_for_instance(instance, private_key):
                         logging.exception("Unable to get password data for windows instance")
                 # attempt to save the latest userdata execute log
                 logfile = "log/userdata-{}.log".format(instance_id)
-                ret = subprocess.run(["scp","-o","StrictHostKeyChecking=no","-i",private_key,"administrator@{}:\"C:\\ProgramData\Amazon\\EC2-Windows\\Launch\\Log\\UserdataExecution.log\"".format(i.public_ip_address),logfile])
+                ret = subprocess.run(["scp","-q","-o","StrictHostKeyChecking=no","-o","ConnectTimeout=10","-i",private_key,"administrator@{}:\"C:\\ProgramData\Amazon\\EC2-Windows\\Launch\\Log\\UserdataExecution.log\"".format(i.public_ip_address),logfile])
                 if ret.returncode == 0:
-                    logging.info("Updated userdata execution log to %s", logfile)
+                    if os.stat(logfile).st_size != last_log_size:
+                        last_log_size = os.stat(logfile).st_size
+                        logging.info("Saved userdata execution log to %s (size=%d)", logfile, last_log_size)
                 else:
                     logging.info("Unable to retrieve userdata log, does this windows system have sshd installed and running?")
+                    continue
+                stage2_logfile = "log/stage2-{}.log".format(instance_id)
+                ret = subprocess.run(["scp","-q","-o","StrictHostKeyChecking=no","-i",private_key,"administrator@{}:\"C:\\stage2.log\"".format(i.public_ip_address),stage2_logfile])
+                if ret.returncode == 0:
+                    if os.stat(stage2_logfile).st_size != last_stage2_log_size:
+                        last_stage2_log_size = os.stat(stage2_logfile).st_size
+                        logging.info("Saved stage2 log to %s (size=%d)", stage2_logfile, last_stage2_log_size)
             else:
                 logging.info("Attempting to get cloud-init output log.")
                 os.system("ssh -o StrictHostKeyChecking=no -i {} ubuntu@{} tail -n +0 -f /var/log/cloud-init-output.log 2>/dev/null".format(private_key, i.public_ip_address))
