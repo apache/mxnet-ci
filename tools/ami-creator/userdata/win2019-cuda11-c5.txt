@@ -91,11 +91,8 @@ $action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-executio
 $principal = New-ScheduledTaskPrincipal -UserID "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 Register-ScheduledTask -TaskName "Stage2Install" -Action $action -Trigger $trigger -Principal $principal
 
-# install nvidia driver for g3
-# stage 2 installs will run after driver install reboot
-Invoke-WebRequest -Uri https://windows-post-install.s3-us-west-2.amazonaws.com/nvidia_display_drivers_g3_452.39_win10_64.zip -OutFile drivers.zip
-Expand-Archive -Path drivers.zip -DestinationPath c:\drivers
-Remove-Item drivers.zip
-Check-Call { C:\drivers\setup.exe -clean -forcereboot -noeula -nofinish -passive }
+# reboot to trigger stage2 install
+# (normally nvidia driver install would reboot)
+shutdown -r -t 30
 
 </powershell>

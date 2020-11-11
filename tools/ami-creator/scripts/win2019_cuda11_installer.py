@@ -19,7 +19,7 @@
 """Dependency installer for Windows"""
 
 __author__ = 'Pedro Larroy, Chance Bair, Joe Evans'
-__version__ = '0.3'
+__version__ = '0.4'
 
 import argparse
 import errno
@@ -52,10 +52,8 @@ log = logging.getLogger(__name__)
 DEPS = {
     'openblas': 'https://windows-post-install.s3-us-west-2.amazonaws.com/OpenBLAS-windows-v0_2_19.zip',
     'opencv': 'https://windows-post-install.s3-us-west-2.amazonaws.com/opencv-windows-4.1.2-vc14_vc15.zip',
-    'cudnn': 'https://windows-post-install.s3-us-west-2.amazonaws.com/cudnn-11.0-windows-x64-v8.0.3.33.zip',
-    'nvdriver': {
-        'p3': 'https://windows-post-install.s3-us-west-2.amazonaws.com/nvidia_display_drivers_451.82_server2019.zip',
-    },
+    'cudnn7': 'https://windows-post-install.s3-us-west-2.amazonaws.com/cudnn-10.2-windows10-x64-v7.6.5.32.zip',
+    'cudnn8': 'https://windows-post-install.s3-us-west-2.amazonaws.com/cudnn-11.0-windows-x64-v8.0.3.33.zip',
     'perl': 'http://strawberryperl.com/download/5.30.1.1/strawberry-perl-5.30.1.1-64bit.msi',
     'clang': 'https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/LLVM-9.0.1-win64.exe',
 }
@@ -189,8 +187,21 @@ def on_rm_error(func, path, exc_info):
     os.chmod(path, stat.S_IWRITE)
     os.unlink(path)
 
+def reboot_system():
+    logging.info("Rebooting system now...")
+    run_command("shutdown -r -t 5")
+    exit(0)
+
+def shutdown_system():
+    logging.info("Shutting down system now...")
+    # wait 60 sec so we can capture the install logs
+    run_command("shutdown -s -t 60")
+    exit(0)
 
 def install_vs():
+    if os.path.exists("C:\\Program Files (x86)\\Microsoft Visual Studio\\2019"):
+        logging.info("MSVS already installed, skipping.")
+        return False
     # Visual Studio 2019
     # Components: https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community?view=vs-2019#visual-studio-core-editor-included-with-visual-studio-community-2019
     logging.info("Installing Visual Studio 2019...")
@@ -198,6 +209,7 @@ def install_vs():
     run_command("PowerShell Rename-Item -Path {} -NewName \"{}.exe\"".format(vs_file_path,
                                                                              vs_file_path.split('\\')[-1]), shell=True)
     vs_file_path = vs_file_path + '.exe'
+    logging.info("Installing VisualStudio 2019.....")
     ret = call(vs_file_path +
                ' --add Microsoft.VisualStudio.Workload.ManagedDesktop'
                ' --add Microsoft.VisualStudio.Workload.NetCoreTools'
@@ -226,8 +238,8 @@ def install_vs():
         logging.info("VS install successful.")
     else:
         raise RuntimeError("VS failed to install, exit status {}".format(ret))
-    # Workaround for --wait sometimes ignoring the subprocesses doing component installs
 
+    # Workaround for --wait sometimes ignoring the subprocesses doing component installs
     def vs_still_installing():
         return {'vs_installer.exe', 'vs_installershell.exe', 'vs_setup_bootstrapper.exe'} & set(map(lambda process: process.name(), psutil.process_iter()))
     timer = 0
@@ -241,41 +253,61 @@ def install_vs():
         logging.warning("VS install still running after timeout (%d)", DEFAULT_SUBPROCESS_TIMEOUT)
     else:
         logging.info("Visual studio install complete.")
+    return True
 
 
 def install_perl():
+    if os.path.exists("C:\\Strawberry\\perl\\bin\\perl.exe"):
+        logging.info("Perl already installed, skipping.")
+        return False
     logging.info("Installing Perl")
     with tempfile.TemporaryDirectory() as tmpdir:
         perl_file_path = download(DEPS['perl'], tmpdir)
         check_call(['msiexec ', '/n', '/passive', '/i', perl_file_path])
     logging.info("Perl install complete")
+    return True
 
 
 def install_clang():
+    if os.path.exists("C:\\Program Files\\LLVM"):
+        logging.info("Clang already installed, skipping.")
+        return False
     logging.info("Installing Clang")
     with tempfile.TemporaryDirectory() as tmpdir:
         clang_file_path = download(DEPS['clang'], tmpdir)
         run_command(clang_file_path + " /S /D=C:\\Program Files\\LLVM")
     logging.info("Clang install complete")
+    return True
 
 
 def install_openblas():
+    if os.path.exists("C:\\Program Files\\OpenBLAS-windows-v0_2_19"):
+        logging.info("OpenBLAS already installed, skipping.")
+        return False
     logging.info("Installing OpenBLAS")
     local_file = download(DEPS['openblas'])
     with zipfile.ZipFile(local_file, 'r') as zip:
         zip.extractall("C:\\Program Files")
     run_command("PowerShell Set-ItemProperty -path 'hklm:\\system\\currentcontrolset\\control\\session manager\\environment' -Name OpenBLAS_HOME -Value 'C:\\Program Files\\OpenBLAS-windows-v0_2_19'")
     logging.info("Openblas Install complete")
+    return True
 
 
 def install_mkl():
+    if os.path.exists("C:\\Program Files (x86)\\IntelSWTools"):
+        logging.info("Intel MKL already installed, skipping.")
+        return False
     logging.info("Installing MKL 2019.3.203...")
     file_path = download("http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/15247/w_mkl_2019.3.203.exe")
     run_command("{} --silent --remove-extracted-files yes --a install -output=C:\mkl-install-log.txt -eula=accept".format(file_path))
     logging.info("MKL Install complete")
+    return True
 
 
 def install_opencv():
+    if os.path.exists("C:\\Program Files\\opencv"):
+        logging.info("OpenCV already installed, skipping.")
+        return False
     logging.info("Installing OpenCV")
     with tempfile.TemporaryDirectory() as tmpdir:
         local_file = download(DEPS['opencv'])
@@ -285,13 +317,35 @@ def install_opencv():
 
     run_command("PowerShell Set-ItemProperty -path 'hklm:\\system\\currentcontrolset\\control\\session manager\\environment' -Name OpenCV_DIR -Value 'C:\\Program Files\\opencv'")
     logging.info("OpenCV install complete")
+    return True
 
-
-def install_cudnn():
+def install_cudnn7():
+    if os.path.exists("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\bin\\cudnn64_7.dll"):
+        logging.info("cuDNN7 already installed, skipping.")
+        return False
     # cuDNN
-    logging.info("Installing cuDNN")
+    logging.info("Installing cuDNN7")
     with tempfile.TemporaryDirectory() as tmpdir:
-        local_file = download(DEPS['cudnn'])
+        local_file = download(DEPS['cudnn7'])
+        with zipfile.ZipFile(local_file, 'r') as zip:
+            zip.extractall(tmpdir)
+        for f in glob.glob(tmpdir+"\\cuda\\bin\\*"):
+            copy(f, "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\bin")
+        for f in glob.glob(tmpdir+"\\cuda\\include\\*.h"):
+            copy(f, "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\include")
+        for f in glob.glob(tmpdir+"\\cuda\\lib\\x64\\*"):
+            copy(f, "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\lib\\x64")
+    logging.info("cuDNN7 install complete")
+    return True
+
+def install_cudnn8():
+    if os.path.exists("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.0\\bin\\cudnn64_8.dll"):
+        logging.info("cuDNN7 already installed, skipping.")
+        return False
+    # cuDNN
+    logging.info("Installing cuDNN8")
+    with tempfile.TemporaryDirectory() as tmpdir:
+        local_file = download(DEPS['cudnn8'])
         with zipfile.ZipFile(local_file, 'r') as zip:
             zip.extractall(tmpdir)
         for f in glob.glob(tmpdir+"\\cuda\\bin\\*"):
@@ -300,47 +354,62 @@ def install_cudnn():
             copy(f, "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.0\\include")
         for f in glob.glob(tmpdir+"\\cuda\\lib\\x64\\*"):
             copy(f, "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.0\\lib\\x64")
-    logging.info("cuDNN install complete")
+    logging.info("cuDNN8 install complete")
+    return True
 
 def instance_family():
     return urllib.request.urlopen('http://instance-data/latest/meta-data/instance-type').read().decode().split('.')[0]
 
-def install_gpu_driver(force=False):
-    if has_gpu() or force:
-        logging.info("GPU detected")
-        install_nvdriver(instance_family())
-
-
-def install_nvdriver(instance_type):
-    logging.info("Installing Nvidia Display Drivers...")
-    if instance_type not in DEPS['nvdriver'].keys():
-        logging.error("Unable to install nvidia driver, instance type %s is not configured.", instance_family())
-        return
-    with tempfile.TemporaryDirectory(prefix='nvidia drivers') as tmpdir:
-        local_file = download(DEPS['nvdriver'][instance_type])
-        with zipfile.ZipFile(local_file, 'r') as zip:
-            zip.extractall(tmpdir)
-        with remember_cwd():
-            os.chdir(tmpdir)
-            try:
-                check_call(".\setup.exe -noreboot -clean -noeula -nofinish -passive")
-            except subprocess.CalledProcessError as e:
-                logging.exception("Install nvidia driver returned error code: %d", e.returncode)
-    logging.info("NVidia install complete")
-
-
-def install_cuda():
-    logging.info("Installing CUDA and Patches...")
+def install_cuda110():
+    if os.path.exists("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.0\\bin"):
+        logging.info("CUDA 11.0 already installed, skipping.")
+        return False
+    logging.info("Downloadinng CUDA 11.0...")
     cuda_file_path = download(
         'http://developer.download.nvidia.com/compute/cuda/11.0.3/network_installers/cuda_11.0.3_win10_network.exe')
     try:
         check_call("PowerShell Rename-Item -Path {} -NewName \"{}.exe\"".format(cuda_file_path,
                                                                             cuda_file_path.split('\\')[-1]), shell=True)
     except subprocess.CalledProcessError as e:
-        logging.exception("Install CUDA toolkit returned error code: %d", e.returncode)
+        logging.exception("Rename file failed")
     cuda_file_path = cuda_file_path + '.exe'
+    logging.info("Installing CUDA 11.0...")
     check_call(cuda_file_path + ' -s')
+    logging.info("Done installing CUDA 11.0.")
+    return True
 
+def install_cuda102():
+    if os.path.exists("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\bin"):
+        logging.info("CUDA 10.2 already installed, skipping.")
+        return False
+    logging.info("Downloading CUDA 10.2...")
+    cuda_file_path = download(
+        'http://developer.download.nvidia.com/compute/cuda/10.2/Prod/network_installers/cuda_10.2.89_win10_network.exe')
+    try:
+        check_call("PowerShell Rename-Item -Path {} -NewName \"{}.exe\"".format(cuda_file_path,
+                                                                            cuda_file_path.split('\\')[-1]), shell=True)
+    except subprocess.CalledProcessError as e:
+        logging.exception("Rename file failed")
+    cuda_file_path = cuda_file_path + '.exe'
+    logging.info("Installing CUDA 10.2...")
+    check_call(cuda_file_path + ' -s')
+    logging.info("Downloading CUDA 10.2 patch...")
+    patch_file_path = download(
+        'http://developer.download.nvidia.com/compute/cuda/10.2/Prod/patches/1/cuda_10.2.1_win10.exe')
+    try:
+        check_call("PowerShell Rename-Item -Path {} -NewName \"{}.exe\"".format(patch_file_path,
+                                                                            patch_file_path.split('\\')[-1]), shell=True)
+    except subprocess.CalledProcessError as e:
+        logging.exception("Rename patch failed")
+    patch_file_path = patch_file_path + '.exe'
+    logging.info("Installing CUDA patch...")
+    check_call(patch_file_path + ' -s')
+    logging.info("Done installing CUDA 10.2 and patches.")
+    return True
+
+def schedule_aws_userdata():
+    logging.info("Scheduling AWS init so userdata will run on next boot...")
+    run_command("C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeInstance.ps1 -Schedule")
 
 def add_paths():
     # TODO: Add python paths (python -> C:\\Python37\\python.exe, python2 -> C:\\Python27\\python.exe)
@@ -354,44 +423,40 @@ def add_paths():
     logging.debug("new_path: {}".format(new_path))
     run_command("PowerShell Set-ItemProperty -path 'hklm:\\system\\currentcontrolset\\control\\session manager\\environment' -Name Path -Value '" + new_path + "'")
 
-def has_gpu():
-    gpu_family = {'p2', 'p3', 'p4', 'g4dn', 'p3dn', 'g3', 'g2', 'g3s'}
-
-    try:
-        return instance_family() in gpu_family
-    except:
-        return False
-
 
 def script_name() -> str:
     """:returns: script name with leading paths removed"""
     return os.path.split(sys.argv[0])[1]
 
+def remove_install_task():
+    logging.info("Removing stage2 startup task...")
+    run_command("PowerShell Unregister-ScheduledTask -TaskName 'Stage2Install' -Confirm:$false")
+
 
 def main():
     logging.getLogger().setLevel(os.environ.get('LOGLEVEL', logging.DEBUG))
-    logging.basicConfig(filename="C:\\stage2.log", format='{}: %(asctime)sZ %(levelname)s %(message)s'.format(script_name()))
+    logging.basicConfig(filename="C:\\install.log", format='{}: %(asctime)sZ %(levelname)s %(message)s'.format(script_name()))
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-g', '--gpu',
-                        help='GPU install',
-                        default=False,
-                        action='store_true')
-    args = parser.parse_args()
-    if args.gpu or has_gpu():
-        install_gpu_driver(force=True)
-    else:
-        logging.info("GPU environment skipped")
-    # needed for compilation with nvcc
-    install_cuda()
-    install_cudnn()
-    install_vs()
+    # install all necessary software and reboot after some components
+
+    # for CUDA, the last version you install will be the default, based on PATH variable
+    if install_cuda110():
+        reboot_system()
+    install_cudnn8()
+    if install_cuda102():
+        reboot_system()
+    install_cudnn7()
+    if install_vs():
+        reboot_system()
     install_openblas()
     install_mkl()
     install_opencv()
     install_perl()
     install_clang()
     add_paths()
+    remove_install_task()
+    schedule_aws_userdata()
+    shutdown_system()
 
 
 if __name__ == "__main__":
