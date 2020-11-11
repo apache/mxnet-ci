@@ -71,7 +71,7 @@ def wait_for_instance(instance, private_key):
     logging.info("Waiting for instance to install software and shut down. Current state: %s", instance.state['Name'])
     windows_password = None
     last_log_size = 0
-    last_stage2_log_size = 0
+    last_install_log_size = 0
     while (current_state['Code'] != 80):
         time.sleep(20)
         i = ec2Client.Instance(instance_id)
@@ -98,16 +98,16 @@ def wait_for_instance(instance, private_key):
                 if ret.returncode == 0:
                     if os.stat(logfile).st_size != last_log_size:
                         last_log_size = os.stat(logfile).st_size
-                        logging.info("Saved userdata execution log to %s (size=%d)", logfile, last_log_size)
+                        logging.info("Updated userdata execution log to %s (size=%d)", logfile, last_log_size)
                 else:
-                    logging.info("Unable to retrieve userdata log, does this windows system have sshd installed and running?")
+                    logging.debug("Unable to retrieve userdata log via ssh, does this windows system have sshd installed and running?")
                     continue
-                stage2_logfile = "log/stage2-{}.log".format(instance_id)
-                ret = subprocess.run(["scp","-q","-o","StrictHostKeyChecking=no","-i",private_key,"administrator@{}:\"C:\\stage2.log\"".format(i.public_ip_address),stage2_logfile])
+                install_logfile = "log/install-{}.log".format(instance_id)
+                ret = subprocess.run(["scp","-q","-o","StrictHostKeyChecking=no","-i",private_key,"administrator@{}:\"C:\\install.log\"".format(i.public_ip_address),install_logfile])
                 if ret.returncode == 0:
-                    if os.stat(stage2_logfile).st_size != last_stage2_log_size:
-                        last_stage2_log_size = os.stat(stage2_logfile).st_size
-                        logging.info("Saved stage2 log to %s (size=%d)", stage2_logfile, last_stage2_log_size)
+                    if os.stat(install_logfile).st_size != last_install_log_size:
+                        last_install_log_size = os.stat(install_logfile).st_size
+                        logging.info("Updated install log to %s (size=%d)", install_logfile, last_install_log_size)
             else:
                 logging.info("Attempting to get cloud-init output log.")
                 os.system("ssh -o StrictHostKeyChecking=no -i {} ubuntu@{} tail -n +0 -f /var/log/cloud-init-output.log 2>/dev/null".format(private_key, i.public_ip_address))
