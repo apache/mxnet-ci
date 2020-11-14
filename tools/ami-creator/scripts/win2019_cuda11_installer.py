@@ -194,8 +194,8 @@ def reboot_system():
 
 def shutdown_system():
     logging.info("Shutting down system now...")
-    # wait 60 sec so we can capture the install logs
-    run_command("shutdown -s -t 60")
+    # wait 20 sec so we can capture the install logs
+    run_command("shutdown -s -t 20")
     exit(0)
 
 def install_vs():
@@ -360,6 +360,12 @@ def install_cudnn8():
 def instance_family():
     return urllib.request.urlopen('http://instance-data/latest/meta-data/instance-type').read().decode().split('.')[0]
 
+CUDA_COMPONENTS=[
+    'nvcc', 'cublas', 'cublas_dev', 'cudart', 'cufft', 'cufft_dev', 'curand', 'curand_dev', 'cusolver',
+    'cusolver_dev', 'cusparse', 'cusparse_dev', 'npp', 'npp_dev', 'nvrtc', 'nvrtc_dev', 'nvml_dev'
+]
+
+
 def install_cuda110():
     if os.path.exists("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.0\\bin"):
         logging.info("CUDA 11.0 already installed, skipping.")
@@ -375,8 +381,10 @@ def install_cuda110():
     cuda_file_path = cuda_file_path + '.exe'
     logging.info("Installing CUDA 11.0...")
     check_call(cuda_file_path + ' -s')
+    #check_call(cuda_file_path + ' -s ' + " ".join([p + "_11.0" for p in CUDA_COMPONENTS]))
     logging.info("Done installing CUDA 11.0.")
     return True
+
 
 def install_cuda102():
     if os.path.exists("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.2\\bin"):
@@ -393,6 +401,7 @@ def install_cuda102():
     cuda_file_path = cuda_file_path + '.exe'
     logging.info("Installing CUDA 10.2...")
     check_call(cuda_file_path + ' -s')
+    #check_call(cuda_file_path + ' -s ' + " ".join([p + "_10.2" for p in CUDA_COMPONENTS]))
     logging.info("Downloading CUDA 10.2 patch...")
     patch_file_path = download(
         'http://developer.download.nvidia.com/compute/cuda/10.2/Prod/patches/1/cuda_10.2.1_win10.exe')
@@ -403,13 +412,13 @@ def install_cuda102():
         logging.exception("Rename patch failed")
     patch_file_path = patch_file_path + '.exe'
     logging.info("Installing CUDA patch...")
-    check_call(patch_file_path + ' -s')
+    check_call(patch_file_path + ' -s ')
     logging.info("Done installing CUDA 10.2 and patches.")
     return True
 
 def schedule_aws_userdata():
     logging.info("Scheduling AWS init so userdata will run on next boot...")
-    run_command("C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeInstance.ps1 -Schedule")
+    run_command("PowerShell C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeInstance.ps1 -Schedule")
 
 def add_paths():
     # TODO: Add python paths (python -> C:\\Python37\\python.exe, python2 -> C:\\Python27\\python.exe)
@@ -443,9 +452,9 @@ def main():
     if install_cuda110():
         reboot_system()
     install_cudnn8()
-    if install_cuda102():
-        reboot_system()
-    install_cudnn7()
+    #if install_cuda102():
+    #    reboot_system()
+    #install_cudnn7()
     if install_vs():
         reboot_system()
     install_openblas()
