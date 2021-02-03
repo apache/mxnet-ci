@@ -200,3 +200,57 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+    ======================================================================================
+    Apache MXNET (incubating) Subcomponents:
+
+    The Apache MXNET (incubating) project contains subcomponents with separate
+    copyright notices and license terms. Your use of the source code for the
+    these subcomponents is subject to the terms and conditions of the following
+    licenses. If not stated otherwise, their copyright notices and license terms
+    are available at the path of the subcomponent.
+
+    If a folder hierarchy is listed as subcomponent, separate listings of
+    further subcomponents (files or folder hierarchies) part of the hierarchy
+    take precedence.
+
+
+    ======================================================================================
+    Creative Commons Licenses
+    ======================================================================================
+
+    test-data/images/bikes.jpg:
+        Image of Tro Bro Leon 2009
+        https://www.flickr.com/photos/ludovicmauduit/3456319534/
+        by ludovic from Guissény. (Bretagne, Finistère), France
+        This file is licensed under the Creative Commons Attribution-Share Alike 2.0 Generic license.
+        https://creativecommons.org/licenses/by-sa/2.0/deed.en
+        No changes have been made to this image.
+
+    test-data/images/runners.jpg:
+        Image of Ludovic 1929 and Lauren 1196 reach mile 21.
+        https://www.flickr.com/photos/mccun934/6994229411/
+        by Chris Hunkeler from Carlsbad, California, USA
+        This file is licensed under the Creative Commons Attribution-Share Alike 2.0 Generic license.
+        https://creativecommons.org/licenses/by-sa/2.0/deed.en
+        No changes have been made to this image.
+
+    test-data/images/tennis.jpg:
+        Image of Roger Federer @ BNP Paribas 2012 Open vs Federer
+        https://www.flickr.com/photos/mccun934/6994229411/
+        by Mike McCune from Portland
+        This file is licensed under the Creative Commons Attribution 2.0 Generic license.
+        https://creativecommons.org/licenses/by/2.0/deed.en
+        No changes have been made to this image.
+
+
+    ======================================================================================
+    Public Domain
+    ======================================================================================
+
+    test-data/images/soccer2.jpg:
+        Image of kids playing soccer
+        https://www.flickr.com/photos/vaclavjanecek/21364825631/
+        by Václav Janeček
+        This file is released in the public domain.
+
