@@ -829,7 +829,8 @@ echo '{SLAVE_NAME}' > /home/jenkins_slave/jenkins_slave_name
                 SLAVE_NAME=target_instance_name
             )
 
-    linux_types = ['restricted-ub18-c6g',
+    linux_types = ['ub18-c6g',
+                   'restricted-ub18-c6g',
                    'mxnetlinux-cpu',
                    'restricted-mxnetlinux-cpu',
                    'mxnetlinux-gpu',
@@ -1239,6 +1240,15 @@ def _get_jenkins_private_tunnel_address():
 @memoize
 def _get_slave_configuration():
     return {
+        'ub18-c6g': {
+            'num_executors': _get_nb_executors_per_label()['ub18-c6g'],  # Number of executors
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 18.04 on a c6g.16xlarge',
+            'remote_fs': '/home/jenkins_slave',  # Remote workspace location
+            'labels': 'ub18-c6g',  # Space separated labels string
+            'exclusive': True,  # Only run jobs assigned to it
+            'tunnel': _get_jenkins_private_tunnel_address(),
+            'job_name_restriction_regex': '^(?!restricted-).+'  # Run only unrestricted jobs
+        },
         'restricted-ub18-c6g': {
             'num_executors': _get_nb_executors_per_label()['restricted-ub18-c6g'],  # Number of executors
             'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 18.04 on a c6g.16xlarge',
