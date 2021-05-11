@@ -822,13 +822,11 @@ cd C:\jenkins_slave
 echo '{JENKINS_PUBLIC_URL}' > /home/jenkins_slave/jenkins_master_url
 echo '{JENKINS_PRIVATE_URL}' > /home/jenkins_slave/jenkins_master_private_url
 echo '{SLAVE_NAME}' > /home/jenkins_slave/jenkins_slave_name
-echo '{EFS_DNS_ADDRESS}' > /home/jenkins_slave/ccache_efs_address
 
             """.format(
                 JENKINS_PUBLIC_URL=jenkins_credentials['jenkins_url'],
                 JENKINS_PRIVATE_URL=jenkins_credentials['jenkins_priv_url'],
-                SLAVE_NAME=target_instance_name,
-                EFS_DNS_ADDRESS=_ccache_efs_addresses()[label]
+                SLAVE_NAME=target_instance_name
             )
 
     linux_types = ['restricted-ub18-c6g',
@@ -1221,15 +1219,6 @@ def _managed_jenkins_node_labels() -> List[str]:
     :return: Config list
     """
     return json.loads(os.environ['MANAGED_JENKINS_NODE_LABELS'])
-
-
-@memoize
-def _ccache_efs_addresses() -> Dict[str, str]:
-    """
-    Get a dict mapping the ccache EFS DNS addresses to their labels
-    :return: Config dict
-    """
-    return json.loads(os.environ['CCACHE_EFS_DNS'])
 
 
 @memoize
