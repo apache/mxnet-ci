@@ -321,21 +321,24 @@ def install_opencv():
     return True
 
 def install_cudnn8():
-    if os.path.exists("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.0\\bin\\cudnn64_8.dll"):
-        logging.info("cuDNN7 already installed, skipping.")
+    cuda_root_path = "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.4"
+    if os.path.exists(cuda_root_path + "\\bin\\cudnn64_8.dll"):
+        logging.info("cuDNN8 already installed, skipping.")
         return False
     # cuDNN
     logging.info("Installing cuDNN8")
     with tempfile.TemporaryDirectory() as tmpdir:
         local_file = download(DEPS['cudnn8'])
+        logging.info("Extracting cuDNN archive.")
         with zipfile.ZipFile(local_file, 'r') as zip:
             zip.extractall(tmpdir)
+        logging.info("Copying cuDNN distribution files.")
         for f in glob.glob(tmpdir+"\\cuda\\bin\\*"):
-            copy(f, "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.0\\bin")
+            copy(f, cuda_root_path + "\\bin")
         for f in glob.glob(tmpdir+"\\cuda\\include\\*.h"):
-            copy(f, "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.0\\include")
+            copy(f, cuda_root_path + "\\include")
         for f in glob.glob(tmpdir+"\\cuda\\lib\\x64\\*"):
-            copy(f, "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.0\\lib\\x64")
+            copy(f, cuda_root_path + "\\lib\\x64")
     logging.info("cuDNN8 install complete")
     return True
 
