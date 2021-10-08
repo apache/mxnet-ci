@@ -1252,7 +1252,7 @@ def _get_slave_configuration():
     return {
         'mxnetlinux-cpu': {
             'num_executors': _get_nb_executors_per_label()['mxnetlinux-cpu'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 16.04 on a c5.18xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'mxnetlinux-cpu',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1261,7 +1261,7 @@ def _get_slave_configuration():
         },
         'mxnetlinux-gpu': {
             'num_executors': _get_nb_executors_per_label()['mxnetlinux-gpu'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 16.04 on a g3.8xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu on a GPU instance',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'mxnetlinux-gpu',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1270,7 +1270,7 @@ def _get_slave_configuration():
         },
         'mxnetlinux-gpu-g4': {
             'num_executors': _get_nb_executors_per_label()['mxnetlinux-gpu-g4'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 18.04 on a g4dn.4xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu on a g4 instance',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'mxnetlinux-gpu-g4',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1279,7 +1279,7 @@ def _get_slave_configuration():
         },
         'restricted-mxnetlinux-gpu': {
             'num_executors': _get_nb_executors_per_label()['restricted-mxnetlinux-gpu'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 16.04 on a g3.8xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu on a GPU instance',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'restricted-mxnetlinux-gpu',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1288,7 +1288,7 @@ def _get_slave_configuration():
         },
         'mxnetlinux-gpu-p3': {
             'num_executors': _get_nb_executors_per_label()['mxnetlinux-gpu-p3'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 16.04 on a p3.2xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu on a p3 instance',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'mxnetlinux-gpu-p3',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1297,25 +1297,16 @@ def _get_slave_configuration():
         },
         'restricted-mxnetlinux-gpu-p3': {
             'num_executors': _get_nb_executors_per_label()['mxnetlinux-gpu-p3'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 16.04 on a p3.2xlarge (restricted)',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu on a p3 instance (restricted)',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'restricted-mxnetlinux-gpu-p3',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
             'tunnel': _get_jenkins_private_tunnel_address(),
             'job_name_restriction_regex': '^restricted-(.*)'  # Only run jobs which start with restricted-
         },
-        'mxnetlinux-gpu-p3-8xlarge': {
-            'num_executors': _get_nb_executors_per_label()['mxnetlinux-gpu-p3-8xlarge'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 16.04 on a p3.8xlarge',
-            'remote_fs': '/home/jenkins_slave',  # Remote workspace location
-            'labels': 'mxnetlinux-gpu-p3-8xlarge',  # Space separated labels string
-            'exclusive': True,  # Only run jobs assigned to it
-            'tunnel': _get_jenkins_private_tunnel_address(),
-            'job_name_restriction_regex': '^(?!restricted-).+'  # Run only unrestricted jobs
-        },
         'mxnetwindows-cpu': {
             'num_executors': _get_nb_executors_per_label()['mxnetwindows-cpu'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Windows Datacenter 2016 on a c5.18xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Windows',
             'remote_fs': 'C:/jenkins_slave',  # Remote workspace location
             'labels': 'mxnetwindows-cpu',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1324,7 +1315,7 @@ def _get_slave_configuration():
         },
         'mxnetwindows-gpu': {
             'num_executors': _get_nb_executors_per_label()['mxnetwindows-gpu'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Windows Datacenter 2016 on a g3.8xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Windows on a GPU instance',
             'remote_fs': 'C:/jenkins_slave',  # Remote workspace location
             'labels': 'mxnetwindows-gpu',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1333,7 +1324,7 @@ def _get_slave_configuration():
         },
         'restricted-mxnetlinux-cpu': {
             'num_executors': _get_nb_executors_per_label()['mxnetlinux-cpu'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 16.04 on a c5.18xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu (restriced)',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'restricted-mxnetlinux-cpu',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
