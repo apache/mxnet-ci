@@ -35,7 +35,6 @@ write_files:
     content: |
       #!/bin/sh
       set -ex
-      sleep 300
       python3 /home/jenkins_slave/scripts/slave-autoconnect.py --slave-name-file=/home/jenkins_slave/jenkins_slave_name --master-file=/home/jenkins_slave/jenkins_master_url --master-private-file=/home/jenkins_slave/jenkins_master_private_url > /home/jenkins_slave/auto-connect.log
   - path: /etc/fstab
     content: |
