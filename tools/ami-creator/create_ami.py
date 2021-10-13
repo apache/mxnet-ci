@@ -94,7 +94,7 @@ def wait_for_instance(instance, private_key):
                         logging.exception("Unable to get password data for windows instance")
                 # attempt to save the latest userdata execute log
                 logfile = "log/userdata-{}.log".format(instance_id)
-                ret = subprocess.run(["scp","-q","-o","StrictHostKeyChecking=no","-o","ConnectTimeout=10","-i",private_key,"administrator@{}:\"C:\\ProgramData\Amazon\\EC2-Windows\\Launch\\Log\\UserdataExecution.log\"".format(i.public_ip_address),logfile])
+                ret = subprocess.run(["scp","-q","-T","-o","StrictHostKeyChecking=no","-o","ConnectTimeout=10","-i",private_key,"administrator@{}:\"C:\\ProgramData\Amazon\\EC2-Windows\\Launch\\Log\\UserdataExecution.log\"".format(i.public_ip_address),logfile])
                 if ret.returncode == 0:
                     if os.stat(logfile).st_size != last_log_size:
                         last_log_size = os.stat(logfile).st_size
@@ -103,7 +103,7 @@ def wait_for_instance(instance, private_key):
                     logging.debug("Unable to retrieve userdata log via ssh, does this windows system have sshd installed and running?")
                     continue
                 install_logfile = "log/install-{}.log".format(instance_id)
-                ret = subprocess.run(["scp","-q","-o","StrictHostKeyChecking=no","-i",private_key,"administrator@{}:\"C:\\install.log\"".format(i.public_ip_address),install_logfile])
+                ret = subprocess.run(["scp","-q","-T","-o","StrictHostKeyChecking=no","-i",private_key,"administrator@{}:\"C:\\install.log\"".format(i.public_ip_address),install_logfile])
                 if ret.returncode == 0:
                     if os.stat(install_logfile).st_size != last_install_log_size:
                         last_install_log_size = os.stat(install_logfile).st_size
