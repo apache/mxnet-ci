@@ -37,9 +37,9 @@ Remove-Item -path ./install.ps1 -force
 # install dependencies
 Check-Call { C:\ProgramData\chocolatey\choco install python --version=3.8.10 --force -y --no-progress }
 refreshenv
-Check-Call { C:\Python37\python -m pip install --upgrade pip  }
+Check-Call { C:\Python38\python -m pip install --upgrade pip  }
 Invoke-WebRequest -Uri https://raw.githubusercontent.com/aiengines/ci/master/ami_generation/windows/requirements.txt -OutFile requirements.txt
-Check-Call { C:\Python37\python -m pip install -r requirements.txt  }
+Check-Call { C:\Python38\python -m pip install -r requirements.txt  }
 
 Check-Call { C:\ProgramData\chocolatey\choco install git -y }
 Check-Call { C:\ProgramData\chocolatey\choco install 7zip -y }
@@ -82,7 +82,7 @@ function Check-Call {
 Set-ExecutionPolicy Bypass -Scope Process -Force
 cd C:\Users\Administrator
 Invoke-WebRequest -Uri https://windows-post-install.s3-us-west-2.amazonaws.com/win2019_cuda114_installer.py -OutFile C:\Users\Administrator\windows_deps_headless_installer.py
-Check-Call { C:\Python37\python windows_deps_headless_installer.py }
+Check-Call { C:\Python38\python windows_deps_headless_installer.py }
 '@
 
 $progressPreference = 'silentlyContinue'
