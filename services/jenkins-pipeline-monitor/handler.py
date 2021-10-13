@@ -11,7 +11,7 @@ logging.getLogger().setLevel(logging.INFO)
 logging.getLogger('boto3').setLevel(logging.CRITICAL)
 logging.getLogger('botocore').setLevel(logging.CRITICAL)
 
-release_job_type = ['mxnet_lib/static', 'python/pypi']
+release_job_type = ['mxnet_lib', 'python/pypi', 'python/docker']
 
 
 def get_jenkins_obj(secret):
