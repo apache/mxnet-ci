@@ -35,7 +35,7 @@ refreshenv
 Remove-Item -path ./install.ps1 -force
 
 # install dependencies
-Check-Call { C:\ProgramData\chocolatey\choco install python --version=3.7.0 --force -y --no-progress }
+Check-Call { C:\ProgramData\chocolatey\choco install python --version=3.8.12 --force -y --no-progress }
 refreshenv
 Check-Call { C:\Python37\python -m pip install --upgrade pip  }
 Invoke-WebRequest -Uri https://raw.githubusercontent.com/aiengines/ci/master/ami_generation/windows/requirements.txt -OutFile requirements.txt
