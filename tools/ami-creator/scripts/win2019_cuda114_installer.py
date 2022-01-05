@@ -224,6 +224,7 @@ def install_vs():
                ' --add Microsoft.VisualStudio.Component.Static.Analysis.Tools'
                ' --add Microsoft.VisualStudio.Component.VC.CMake.Project'
                ' --add Microsoft.VisualStudio.Component.VC.140'
+               ' --add Microsoft.VisualStudio.Component.VC.14.28.x86.x64'
                ' --add Microsoft.VisualStudio.Component.Windows10SDK.18362.Desktop'
                ' --add Microsoft.VisualStudio.Component.Windows10SDK.18362.UWP'
                ' --add Microsoft.VisualStudio.Component.Windows10SDK.18362.UWP.Native'
