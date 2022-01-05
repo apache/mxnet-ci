@@ -1,0 +1,75 @@
+#cloud-config
+
+apt_reboot_if_required: false
+package_update: true
+package_upgrade: true
+
+packages:
+  - htop
+  - wget
+  - openjdk-8-jre
+  - git
+  - python3
+  - python3-pip
+  - python3-yaml
+  - python3-jenkins
+  - python3-joblib
+  - docker.io
+  - awscli
+  - nfs-common
+  - libattr1-dev
+
+write_files:
+  - path: /etc/docker/daemon.json
+    content: |
+      {
+        "live-restore": true
+      }
+  - path: /etc/cron.d/jenkins-start-slave
+    content: |
+      @reboot jenkins_slave /home/jenkins_slave/scripts/launch-autoconnect.sh
+  - path: /etc/cron.d/apt-update-on-startup
+    content: |
+      @reboot root /root/apt_update_startup.sh
+  - path: /root/apt_update_startup.sh
+    content: |
+      export DEBIAN_FRONTEND=noninteractive
+      apt update
+      apt upgrade -y
+      touch /tmp/apt.done
+  - path: /home/jenkins_slave/scripts/launch-autoconnect.sh
+    content: |
+      #!/bin/sh
+      set -ex
+      while [ ! -e /tmp/apt.done ]; do sleep 5; done
+      python3 /home/jenkins_slave/scripts/slave-autoconnect.py --slave-name-file=/home/jenkins_slave/jenkins_slave_name --master-file=/home/jenkins_slave/jenkins_master_url --master-private-file=/home/jenkins_slave/jenkins_master_private_url > /home/jenkins_slave/auto-connect.log
+  - path: /etc/fstab
+    content: |
+      /swapfile none swap sw 0 0
+    append: true
+
+
+runcmd:
+  - [ "fallocate", "-l", "10G", "/swapfile" ]
+  - [ "chown", "root:root", "/swapfile" ]
+  - [ "chmod", "0600", "/swapfile" ]
+  - [ "mkswap", "/swapfile" ]
+  - [ "swapon", "/swapfile" ]
+  - [ "useradd", "jenkins_slave" ]
+  - [ "usermod", "-L", "jenkins_slave" ]
+  - [ "mkdir", "-p", "/home/jenkins_slave/remoting", "/home/jenkins_slave/scripts" ]
+  - [ "pip3", "install", "docker<4.0.0", "boto3" ]
+  - [ "pip3", "install", "--upgrade", "awscli" ]
+  - [ "usermod", "-aG", "docker", "jenkins_slave" ]
+  - [ "systemctl", "enable", "docker" ]
+  - [ "wget", "-O", "/home/jenkins_slave/scripts/slave-autoconnect.py", "https://raw.githubusercontent.com/apache/incubator-mxnet-ci/master/tools/jenkins-slave-creation-unix/scripts/deploy/slave-autoconnect.py" ]
+  - [ "touch", "/home/jenkins_slave/auto-connect.log" ]
+  - [ "chown", "-R", "jenkins_slave:jenkins_slave", "/home/jenkins_slave" ]
+  - [ "chmod", "+x", "/home/jenkins_slave/scripts/slave-autoconnect.py", "/home/jenkins_slave/scripts/launch-autoconnect.sh", "/root/apt_update_startup.sh" ]
+  - [ "curl", "-L", "https://github.com/docker/compose/releases/download/v2.2.2/docker-compose-linux-aarch64", "-o", "/usr/bin/docker-compose" ]
+  - [ "chmod", "+x", "/usr/bin/docker-compose" ]
+  - [ "rm", "-f", "/var/lib/cloud/instances/*/sem/config_scripts_user", "/var/lib/cloud/instance/sem/config_scripts_user" ]
+  - [ "rm", "-f", "/tmp/apt.done" ]
+  - [ "sleep", "10" ]
+  - [ "halt", "-p" ]
+
