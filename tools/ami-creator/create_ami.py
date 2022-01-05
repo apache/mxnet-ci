@@ -9,7 +9,8 @@ import base64, binascii, getpass, optparse, sys
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP, PKCS1_v1_5
 
-ec2Client = boto3.resource('ec2')
+ec2Resource = boto3.resource('ec2')
+ec2Client = boto3.client('ec2')
 
 def read_userdata(file):
     logging.info("Reading userdata from file %s", file)
@@ -18,7 +19,7 @@ def read_userdata(file):
 
 def create_instance(instance_type, disk_size, userdata_file, ami, security_group, ssh_key):
     logging.info("Creating instance type %s for image creation", instance_type)
-    instances = ec2Client.create_instances(
+    instances = ec2Resource.create_instances(
         BlockDeviceMappings=[
             {
                 'DeviceName': '/dev/sda1',
@@ -74,7 +75,7 @@ def wait_for_instance(instance, private_key):
     last_install_log_size = 0
     while (current_state['Code'] != 80):
         time.sleep(20)
-        i = ec2Client.Instance(instance_id)
+        i = ec2Resource.Instance(instance_id)
         if current_state['Code'] != i.state['Code']:
             current_state = i.state
             logging.info("Instance state changed to: %s", current_state['Name'])
@@ -103,7 +104,7 @@ def wait_for_instance(instance, private_key):
                     logging.debug("Unable to retrieve userdata log via ssh, does this windows system have sshd installed and running?")
                     continue
                 install_logfile = "log/install-{}.log".format(instance_id)
-                ret = subprocess.run(["scp","-q","-T","-o","StrictHostKeyChecking=no","-i",private_key,"administrator@{}:\"C:\\install.log\"".format(i.public_ip_address),install_logfile])
+                ret = subprocess.run(["scp","-q","-T","-o","StrictHostKeyChecking=no","-o","ConnectTimeout=10","-i",private_key,"administrator@{}:\"C:\\install.log\"".format(i.public_ip_address),install_logfile])
                 if ret.returncode == 0:
                     if os.stat(install_logfile).st_size != last_install_log_size:
                         last_install_log_size = os.stat(install_logfile).st_size
@@ -130,7 +131,7 @@ def wait_for_ami(image):
     logging.info("Waiting for AMI to become available")
     while (current_state != 'available'):
         time.sleep(5)
-        i = ec2Client.Image(ami_id)
+        i = ec2Resource.Image(ami_id)
         if current_state != i.state:
             current_state = i.state
             logging.info("Image state changed to %s", current_state)
@@ -139,6 +140,51 @@ def wait_for_ami(image):
 def terminate_instance(instance):
     logging.info("Terminating instance %s", instance.id)
     instance.terminate()
+
+
+def get_current_lt_version(lt_id):
+    logging.debug("Looking up current version for LT %s", lt_id)
+    response = ec2Client.describe_launch_template_versions(
+        LaunchTemplateId = lt_id,
+        Versions = [ '$Latest' ]
+    )
+    try:
+        latest_version = response['LaunchTemplateVersions'][0]['VersionNumber']
+        logging.debug("Found latest version %s of LT %s", latest_version, lt_id)
+        return latest_version
+    except:
+        logging.error("Unable to get latest LT version for LT %s", lt_id)
+
+def set_default_lt_version(lt_id, version):
+    logging.debug("Setting the default version to %s for LT %s", version, lt_id)
+    try:
+        response = ec2Client.modify_launch_template(
+            LaunchTemplateId = lt_id,
+            DefaultVersion = str(version)
+        )
+    except:
+        logging.error("Unable to set default LT version for LT %s", lt_id)
+        return False
+    return True
+
+
+def update_launch_template(lt_id, ami_id):
+    latest_version = get_current_lt_version(lt_id)
+    if not latest_version:
+        logging.error("Unable to get current LT version for LT %s, not updating.", lt_id)
+        return None
+    logging.info("Updating Launch Template %s with new AMI %s", lt_id, ami_id)
+    response = ec2Client.create_launch_template_version(
+        LaunchTemplateId = lt_id,
+        SourceVersion = str(latest_version),
+        LaunchTemplateData = {
+            'ImageId': ami_id
+        }
+    )
+    new_version = response['LaunchTemplateVersion']['VersionNumber']
+    logging.debug("Successfully created new LT %s version %s", lt_id, new_version)
+    set_default_lt_version(lt_id, new_version)
+    return new_version
 
 
 def main():
@@ -155,6 +201,8 @@ def main():
         help="Security group ID for instance")
     parser.add_option("-k", "--key-name", dest="ssh_key",
         help="SSH key pair name to use")
+    parser.add_option("-l", "--launch-templates", dest="launch_templates",
+        help="Comma separated list of launch template IDs to update with newly created AMI")
     parser.add_option("-p", "--private-key", dest="private_key",
         help="Private key used to SSH into instance or decrypt windows password")
     parser.add_option("-u", "--userdata", dest="userdata",
@@ -195,7 +243,6 @@ def main():
         userdata = 'userdata/{}.txt'.format(options.name)
 
 
-
     instance = create_instance(
         instance_type=options.instance_type,
         disk_size=options.disk_size,
@@ -208,6 +255,16 @@ def main():
     image = create_ami(options.name, instance)
     wait_for_ami(image)
     terminate_instance(instance)
+
+    lt_list = options.launch_templates.split(",")
+    if len(lt_list) > 0:
+        logging.info("Updating launch templates with new AMI")
+        for lt_id in lt_list:
+            new_version = update_launch_template(lt_id, image.id)
+            if new_version is None:
+                logging.error("Unable to update LT %s", lt_id)
+            else:
+                logging.info("Created new version %s of LT %s with new AMI", new_version, lt_id)
 
 
 main()
