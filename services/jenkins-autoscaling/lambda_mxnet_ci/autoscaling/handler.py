@@ -59,9 +59,6 @@ RE_NO_AVAILABLE_NODES = r"(^Waiting for next available executor$)"
 # Offline cause for nodes that have been taken offline by the jenkins monitoring
 NODE_MONITOR_OFFLINE_CAUSE = 'hudson.node_monitors'
 
-# Since windows got hourly billing, we only want to consider instances which are running close to the full hour
-WINDOWS_MIN_PARTIAL_RUNTIME_SECONDS = 55 * 60
-
 # EC2s API only allows a specific number of filters. This constant defines the chunk size for these requests
 EC2_FILTER_CHUNK_SIZE = 40
 
@@ -279,24 +276,6 @@ def determine_scale_down_nodes(nodes_data: List[Dict[str, Any]], instance_uptime
                              display_name)
                 continue
 
-            # Windows instances are getting billed hourly and need special handling
-            if 'Windows' in node_data['monitorData']['hudson.node_monitors.ArchitectureMonitor']:
-                if display_name not in instance_uptime:
-                    logging.error('Unable to find uptime for %s', display_name)
-                    continue
-
-                running_duration_seconds = instance_uptime[display_name]
-                running_duration_partial = running_duration_seconds % (60 * 60)
-                # Don't shutdown instances below XXh50min uptime to make use of hourly billing
-                if running_duration_partial < WINDOWS_MIN_PARTIAL_RUNTIME_SECONDS:
-                    considered_nodes[label].append(node_data)
-                    logging.debug(
-                        'Ignoring %s because partial runtime %ds is below limit of %ds (hourly billing). Total '
-                        'runtime: %ds',
-                        display_name, running_duration_partial, WINDOWS_MIN_PARTIAL_RUNTIME_SECONDS,
-                        running_duration_seconds)
-                    continue
-
             # TODO: Check for how long an instance has been idling. There is no built-in API for now and the
             # only way is to go through the entire Jenkins build history. Save this up for later.
 
@@ -349,7 +328,7 @@ def _determine_faulty_nodes(nodes: List[Dict[str, Any]], unconnected_instances: 
                 label2faulty_nodes[label].append(node)
 
     for node in nodes:
-        if node['displayName'] == 'master':
+        if node['displayName'] in ['master', 'Built-In Node']:
             # Don't do anything for master
             continue
 
@@ -716,7 +695,6 @@ def _launch_ec2_instances(scale_up_slots, ec2_resource):
 
         launch_template = launch_templates[label]
         launch_template_id = launch_template['id']
-        launch_template_version = launch_template['version']
 
         for target_instance_name in target_instance_names:
             logging.debug('Launching instance %s of type %s', target_instance_name, label)
@@ -730,7 +708,6 @@ def _launch_ec2_instances(scale_up_slots, ec2_resource):
                     'label': label,
                     'target_instance_name': target_instance_name,
                     'launch_template_id': launch_template_id,
-                    'launch_template_version': launch_template_version,
                     'user_data_command': user_data_command
                 })
 
@@ -738,14 +715,12 @@ def _launch_ec2_instances(scale_up_slots, ec2_resource):
         delayed(_launch_ec2_instance)(ec2_resource=ec2_resource, label=job['label'],
                                       target_instance_name=job['target_instance_name'],
                                       launch_template_id=job['launch_template_id'],
-                                      launch_template_version=job['launch_template_version'],
                                       user_data_command=job['user_data_command']) for job in jobs)
 
     return [x for x in started_instance_names if x is not None]
 
 
-def _launch_ec2_instance(ec2_resource, label, target_instance_name, launch_template_id, launch_template_version,
-                         user_data_command):
+def _launch_ec2_instance(ec2_resource, label, target_instance_name, launch_template_id, user_data_command):
     try:
         ec2_resource.meta.client.run_instances(
             DryRun=False,
@@ -753,7 +728,7 @@ def _launch_ec2_instance(ec2_resource, label, target_instance_name, launch_templ
             MinCount=1,
             LaunchTemplate={
                 'LaunchTemplateId': launch_template_id,
-                'Version': launch_template_version
+                'Version': '$Default'
             },
             TagSpecifications=[
                 {
@@ -1242,7 +1217,7 @@ def _get_slave_configuration():
     return {
         'ub18-c6g': {
             'num_executors': _get_nb_executors_per_label()['ub18-c6g'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 18.04 on a c6g.16xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'ub18-c6g',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1251,7 +1226,7 @@ def _get_slave_configuration():
         },
         'restricted-ub18-c6g': {
             'num_executors': _get_nb_executors_per_label()['restricted-ub18-c6g'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 18.04 on a c6g.16xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'restricted-ub18-c6g',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1269,7 +1244,7 @@ def _get_slave_configuration():
         },
         'restricted-mxnetlinux-cpu': {
             'num_executors': _get_nb_executors_per_label()['mxnetlinux-cpu'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 16.04 on a c5.18xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'restricted-mxnetlinux-cpu',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1278,7 +1253,7 @@ def _get_slave_configuration():
         },
         'mxnetlinux-gpu': {
             'num_executors': _get_nb_executors_per_label()['mxnetlinux-gpu'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 16.04 on a g3.8xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'mxnetlinux-gpu',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1287,7 +1262,7 @@ def _get_slave_configuration():
         },
         'restricted-mxnetlinux-gpu': {
             'num_executors': _get_nb_executors_per_label()['restricted-mxnetlinux-gpu'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu on a GPU instance',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'restricted-mxnetlinux-gpu',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1296,7 +1271,7 @@ def _get_slave_configuration():
         },
         'mxnetlinux-gpu-g4': {
             'num_executors': _get_nb_executors_per_label()['mxnetlinux-gpu-g4'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 18.04 on a g4dn.4xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu on g4',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'mxnetlinux-gpu-g4',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
@@ -1305,12 +1280,21 @@ def _get_slave_configuration():
         },
         'restricted-mxnetlinux-gpu-g4': {
             'num_executors': _get_nb_executors_per_label()['restricted-mxnetlinux-gpu-g4'],  # Number of executors
-            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu 18.04 on a g4dn.4xlarge',
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu on g4',
             'remote_fs': '/home/jenkins_slave',  # Remote workspace location
             'labels': 'restricted-mxnetlinux-gpu-g4',  # Space separated labels string
             'exclusive': True,  # Only run jobs assigned to it
             'tunnel': _get_jenkins_private_tunnel_address(),
             'job_name_restriction_regex': '^restricted-(.*)'  # Only run jobs which start with restricted-
+        },
+        'mxnetlinux-gpu-p3-8xlarge': {
+            'num_executors': _get_nb_executors_per_label()['mxnetlinux-gpu-p3-8xlarge'],  # Number of executors
+            'node_description': '[AUTOSCALING] MXNet slave running Ubuntu on p3.8xlarge',
+            'remote_fs': '/home/jenkins_slave',  # Remote workspace location
+            'labels': 'mxnetlinux-gpu-p3-8xlarge',  # Space separated labels string
+            'exclusive': True,  # Only run jobs assigned to it
+            'tunnel': _get_jenkins_private_tunnel_address(),
+            'job_name_restriction_regex': '^(?!restricted-).+'  # Run only unrestricted jobs
         },
         'mxnetwindows-cpu': {
             'num_executors': _get_nb_executors_per_label()['mxnetwindows-cpu'],  # Number of executors
