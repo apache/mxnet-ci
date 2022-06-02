@@ -24,7 +24,7 @@ apt_get_command: ["apt-get", "--option=Dpkg::Options::=--force-confold", "--opti
 packages:
   - wget
   - curl
-  - openjdk-8-jre
+  - openjdk-11-jre-headless
   - git
   - python3
   - python3-pip
