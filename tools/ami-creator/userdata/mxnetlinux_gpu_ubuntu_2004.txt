@@ -8,7 +8,7 @@ apt:
     nvidia-cuda-drivers.list:
       source: |
         deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64 /
-      keyid: 7FA2AF80
+      keyid: A4B469963BF863CC
     docker.list:
       source: deb [arch=amd64] https://download.docker.com/linux/ubuntu $RELEASE stable
       keyid: 0EBFCD88
@@ -24,7 +24,7 @@ apt_get_command: ["apt-get", "--option=Dpkg::Options::=--force-confold", "--opti
 packages:
   - wget
   - curl
-  - openjdk-8-jre
+  - openjdk-11-jre-headless
   - git
   - python3
   - python3-pip

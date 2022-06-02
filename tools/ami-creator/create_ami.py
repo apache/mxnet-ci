@@ -79,7 +79,7 @@ def wait_for_instance(instance, private_key):
         if current_state['Code'] != i.state['Code']:
             current_state = i.state
             logging.info("Instance state changed to: %s", current_state['Name'])
-        if current_state['Name'] == "running" and i.public_ip_address != "none":
+        if current_state['Name'] == "running" and i.public_ip_address != None:
             if i.platform == "windows":
                 if windows_password == None:
                     logging.debug("Attempting to get password info for instance")
