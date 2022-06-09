@@ -1,4 +1,4 @@
 python-dateutil
 Jinja2>=2.10.1
-pydantic==0.13
+pydantic==1.6.2
 boto3
