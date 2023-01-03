@@ -46,7 +46,7 @@ Check-Call { C:\ProgramData\chocolatey\choco install 7zip -y }
 Check-Call { C:\ProgramData\chocolatey\choco install cmake -y }
 Check-Call { C:\ProgramData\chocolatey\choco install ninja -y }
 refreshenv
-Check-Call { C:\ProgramData\chocolatey\choco install javaruntime -y }
+Check-Call { C:\ProgramData\chocolatey\choco install openjdk11jre -y }
 refreshenv
 
 # get jenkins slave connect scripts
