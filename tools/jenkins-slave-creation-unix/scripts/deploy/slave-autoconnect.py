@@ -51,8 +51,8 @@ In order to use this script, it has to be placed in auto start of your instance.
 part of the launch command in order to get the parameters initialized:
 
 #!/bin/bash
-echo 'http://jenkins.mxnet-ci-dev.amazon-ml.com/' > /home/jenkins_slave/jenkins_master_url
-echo 'http://jenkins-priv.mxnet-ci-dev.amazon-ml.com/' > /home/jenkins_slave/jenkins_master_private_url
+echo 'http://jenkins.mxnet-ci.com/' > /home/jenkins_slave/jenkins_master_url
+echo 'http://jenkins-priv.mxnet-ci.com/' > /home/jenkins_slave/jenkins_master_private_url
 echo 'mxnet-linux-cpu10' > /home/jenkins_slave/jenkins_slave_name
 """
 
@@ -103,7 +103,15 @@ def generate_node_label():
 
 def rename_instance(name: str):
     logging.info('Renaming instance to {}'.format(name))
-    response = urllib.request.urlopen("http://169.254.169.254/latest/dynamic/instance-identity/document")
+    tok_req = urllib.request.Request(url="http://169.254.169.254/latest/api/token")
+    tok_req.headers = { "X-aws-ec2-metadata-token-ttl-seconds": "60" }
+    tok_req.method = "PUT"
+    token_response = urllib.request.urlopen(tok_req)
+    token = token_response.read().decode('utf-8')
+
+    req = urllib.request.Request(url="http://169.254.169.254/latest/dynamic/instance-identity/document")
+    req.headers = { "X-aws-ec2-metadata-token": token }
+    response = urllib.request.urlopen(req)
     instance_info = response.read().decode('utf-8')
     logging.debug('Instance info: {}'.format(instance_info))
 
@@ -241,7 +249,7 @@ def main():
         parser = argparse.ArgumentParser()
         parser.add_argument('-m', '--master',
             help='URL of jenkins master',
-            # default='http://jenkins.mxnet-ci.amazon-ml.com',
+            # default='http://jenkins.mxnet-ci.com',
             type=str)
 
         parser.add_argument('-mf', '--master-file',
@@ -251,7 +259,7 @@ def main():
 
         parser.add_argument('-mp', '--master-private',
             help='Private URL of jenkins master',
-            # default='http://jenkins-priv.mxnet-ci.amazon-ml.com',
+            # default='http://jenkins-priv.mxnet-ci.com',
             type=str)
 
         parser.add_argument('-mpf', '--master-private-file',
