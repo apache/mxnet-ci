@@ -23,7 +23,8 @@ Start-Service ssh-agent
 Start-Service sshd
 
 # setup administrator ssh key
-Invoke-WebRequest -Uri http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key -OutFile C:\ProgramData\ssh\administrators_authorized_keys
+[string]$token = Invoke-RestMethod -Headers @{"X-aws-ec2-metadata-token-ttl-seconds" = "300"} -Method PUT -Uri http://169.254.169.254/latest/api/token
+Invoke-RestMethod -Headers @{"X-aws-ec2-metadata-token" = $token} -Method GET -Uri http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key -OutFile C:\ProgramData\ssh\administrators_authorized_keys
 icacls C:\ProgramData\ssh\administrators_authorized_keys /inheritance:r
 icacls C:\ProgramData\ssh\administrators_authorized_keys /grant "Administrators:(F)"
 Restart-Service -Name sshd, ssh-agent -Force
