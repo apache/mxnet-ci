@@ -21,7 +21,7 @@ ptyprocess==0.6.0
 Pygments==2.7.4
 python-dateutil==2.7.3
 pytz==2018.5
-requests==2.20.0
+requests==2.31.0
 s3transfer==0.1.13
 simplegeneric==0.8.1
 six==1.11.0
